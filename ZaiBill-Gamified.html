@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ ZaiBill Collection & Services - GAMIFIED</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --primary: #E94560;
+            --secondary: #0F3460;
+            --accent: #533483;
+            --gold: #FFD700;
+            --emerald: #10B981;
+            --purple: #8B5CF6;
+        }
+        
+        * {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Particle Background */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(233, 69, 96, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite;
+            box-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        /* Glowing Effects */
+        .glow-card {
+            background: rgba(22, 33, 62, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(233, 69, 96, 0.2);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .glow-card:hover {
+            border-color: rgba(233, 69, 96, 0.5);
+            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3), inset 0 0 30px rgba(233, 69, 96, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .glow-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .glow-button::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #E94560, #533483, #0070BA, #E94560);
+            background-size: 400% 400%;
+            border-radius: inherit;
+            z-index: -1;
+            animation: glowRotate 3s ease infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .glow-button:hover::before {
+            opacity: 1;
+        }
+        
+        @keyframes glowRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Pulse Animation */
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(233, 69, 96, 0.8); }
+        }
+        
+        /* XP Bar */
+        .xp-bar-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #E94560, #FFD700);
+            border-radius: 999px;
+            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .xp-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+        
+        /* Streak Fire */
+        .streak-flame {
+            animation: flame 0.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes flame {
+            0% { transform: scale(1) rotate(-2deg); }
+            100% { transform: scale(1.1) rotate(2deg); }
+        }
+        
+        /* Badge Styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .badge.locked {
+            background: rgba(100, 100, 100, 0.2);
+            color: #666;
+            filter: grayscale(1);
+        }
+        
+        .badge.unlocked {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.2), rgba(83, 52, 131, 0.2));
+            color: #fff;
+            border: 1px solid rgba(233, 69, 96, 0.5);
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(233, 69, 96, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(233, 69, 96, 0.6); }
+        }
+        
+        /* Coin Animation */
+        .coin {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+            z-index: 9999;
+            pointer-events: none;
+            animation: coinFly 1s ease-out forwards;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+        
+        @keyframes coinFly {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.2) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg) translateY(-100px); opacity: 0; }
+        }
+        
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        
+        /* Level Up Modal */
+        .levelup-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .levelup-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .levelup-content {
+            text-align: center;
+            animation: levelUpBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes levelUpBounce {
+            0% { transform: scale(0) rotate(-10deg); }
+            50% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        
+        /* Counting Animation */
+        .count-up {
+            display: inline-block;
+        }
+        
+        /* Progress Ring */
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        /* Card Flip */
+        .flip-card {
+            perspective: 1000px;
+        }
+        
+        .flip-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(10deg);
+        }
+        
+        /* Toast */
+        .toast {
+            animation: toastSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes toastSlide {
+            from { transform: translateX(100%) scale(0.8); opacity: 0; }
+            to { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        
+        /* Nav Active */
+        .nav-active {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.3), rgba(83, 52, 131, 0.3));
+            color: #fff;
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.3);
+        }
+        
+        /* Modal */
+        .modal {
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes modalPop {
+            from { transform: scale(0.8) translateY(50px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        
+        /* Floating Animation */
+        .float {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Achievement Unlock Animation */
+        .achievement-unlock {
+            animation: achievementPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes achievementPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Ripple Effect */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transform: scale(0);
+            opacity: 0;
+        }
+        
+        .ripple:active::after {
+            transform: scale(2);
+            opacity: 1;
+            transition: 0.3s;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #E94560, #533483);
+            border-radius: 4px;
+        }
+        
+        /* Typing Effect */
+        .typing {
+            overflow: hidden;
+            border-right: 2px solid #E94560;
+            white-space: nowrap;
+            animation: typing 2s steps(20) forwards, blink 0.7s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        
+        /* Stats Counter */
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* Daily Goal Progress */
+        .goal-progress {
+            background: linear-gradient(90deg, #10B981, #34D399);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        
+        /* Neon Text */
+        .neon-text {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
+        }
+        
+        /* Bounce Animation */
+        .bounce {
+            animation: bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Particle Background -->
+    <div class="particles-container" id="particles"></div>
+    
+    <!-- Level Up Modal -->
+    <div id="levelup-modal" class="levelup-modal">
+        <div class="levelup-content">
+            <div class="text-8xl mb-4">🎉</div>
+            <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-2">LEVEL UP!</h2>
+            <p class="text-2xl text-gray-300 mb-6">You reached <span id="new-level" class="text-[#E94560] font-bold"></span></p>
+            <div class="text-lg text-gray-400">Keep logging to unlock more rewards!</div>
+        </div>
+    </div>
+    
+    <!-- Achievement Unlock Modal -->
+    <div id="achievement-modal" class="levelup-modal">
+        <div class="levelup-content">
+            <div class="text-8xl mb-4" id="achievement-icon">🏆</div>
+            <h2 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 mb-2">ACHIEVEMENT UNLOCKED!</h2>
+            <p class="text-2xl text-white mb-2" id="achievement-name"></p>
+            <p class="text-lg text-gray-400" id="achievement-desc"></p>
+            <div class="mt-6 text-yellow-400 font-bold text-xl">+<span id="achievement-xp"></span> XP</div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <div class="relative z-10 bg-[#16213E]/90 backdrop-blur-lg border-b border-[#E94560]/30 px-6 py-4 flex items-center justify-between sticky top-0">
+        <div class="flex items-center gap-x-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-[#E94560] to-[#533483] rounded-2xl flex items-center justify-center text-white font-bold text-2xl pulse-glow">Z</div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">ZaiBill <span class="text-[#E94560]">PRO</span></h1>
+                <p class="text-xs text-gray-400 -mt-1">Daily Business Tracker</p>
+            </div>
+        </div>
+        
+        <!-- XP & Level Display -->
+        <div class="hidden md:flex items-center gap-x-6">
+            <!-- Level Badge -->
+            <div class="flex items-center gap-x-3 bg-[#1A1A2E] px-4 py-2 rounded-2xl border border-[#E94560]/30">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center font-bold text-black text-lg" id="level-badge">1</div>
+                <div>
+                    <div class="text-xs text-gray-400">Level</div>
+                    <div class="text-sm font-bold text-yellow-400" id="level-name">Rookie</div>
+                </div>
+            </div>
+            
+            <!-- XP Bar -->
+            <div class="w-48">
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-gray-400">XP</span>
+                    <span class="text-[#E94560] font-mono"><span id="current-xp">0</span> / <span id="xp-needed">100</span></span>
+                </div>
+                <div class="xp-bar-container h-3">
+                    <div class="xp-bar-fill" id="xp-bar" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <!-- Streak -->
+            <div class="flex items-center gap-x-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 px-4 py-2 rounded-2xl border border-orange-500/30">
+                <span class="text-2xl streak-flame">🔥</span>
+                <div>
+                    <div class="text-2xl font-bold text-orange-400" id="streak-count">0</div>
+                    <div class="text-[10px] text-gray-400">day streak</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-x-3">
+            <div class="flex items-center gap-x-2 bg-[#1A1A2E] text-white px-4 h-10 rounded-2xl text-sm font-medium border border-[#0F3460]">
+                <i class="fa-solid fa-peso-sign text-[#E94560]"></i>
+                <span id="global-balance-display" class="font-mono stat-number">₱0.00</span>
+            </div>
+            
+            <button onclick="showAchievements()" class="w-10 h-10 flex items-center justify-center bg-[#1A1A2E] hover:bg-[#0F3460] rounded-2xl transition-colors border border-[#0F3460] relative">
+                <i class="fa-solid fa-trophy text-yellow-400"></i>
+                <span id="badge-notification" class="absolute -top-1 -right-1 w-4 h-4 bg-[#E94560] rounded-full text-[10px] flex items-center justify-center hidden">!</span>
+            </button>
+            
+            <button onclick="exportToCSV()" class="flex items-center gap-x-2 bg-gradient-to-r from-[#E94560] to-[#533483] hover:opacity-90 text-white px-5 h-10 rounded-2xl text-sm font-medium transition-all glow-button">
+                <i class="fa-solid fa-download"></i>
+                <span class="hidden sm:inline">Export</span>
+            </button>
+            
+            <div class="w-10 h-10 bg-gradient-to-br from-[#0070BA] to-[#533483] rounded-2xl flex items-center justify-center text-white font-semibold cursor-pointer hover:scale-110 transition" onclick="showProfile()">
+                Z
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex flex-1 overflow-hidden relative z-10">
+        <!-- SIDEBAR -->
+        <div class="hidden lg:flex w-72 bg-[#16213E]/80 backdrop-blur-lg flex-col border-r border-[#0F3460]">
+            <!-- Daily Goal -->
+            <div class="p-4 border-b border-[#0F3460]">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-300">Daily Goal</span>
+                    <span class="text-xs text-[#10B981]" id="goal-progress-text">0/5</span>
+                </div>
+                <div class="xp-bar-container h-2">
+                    <div class="goal-progress h-full rounded-full transition-all duration-500" id="daily-goal-bar" style="width: 0%"></div>
+                </div>
+                <p class="text-[10px] text-gray-500 mt-1">Complete 5 transactions today</p>
+            </div>
+            
+            <nav class="flex-1 px-3 py-4 space-y-1">
+                <a onclick="navigateTo('dashboard')" id="nav-dashboard" class="nav-item flex items-center gap-x-3 px-4 py-3 rounded-2xl text-sm font-medium hover:bg-[#0F3460]/50 transition-all nav-active ripple">
+                    <i class="fa-solid fa-gauge-high w-5 text-[#E94560]"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a onclick="navigateTo('daily-log')" id="nav-daily-log" class="nav-item flex items-center gap-x-3 px-4 py-3 rounded-2xl text-sm font-medium hover:bg-[#0F3460]/50 transition-all ripple">
+                    <i class="fa-solid fa-calendar-day w-5 text-[#0070BA]"></i>
+                    <span>Daily Log</span>
+                    <span id="log-notification" class="ml-auto w-5 h-5 bg-[#E94560] rounded-full text-[10px] flex items-center justify-center hidden">!</span>
+                </a>
+                <a onclick="navigateTo('weekly')" id="nav-weekly" class="nav-item flex items-center gap-x-3 px-4 py-3 rounded-2xl text-sm font-medium hover:bg-[#0F3460]/50 transition-all ripple">
+                    <i class="fa-solid fa-calendar-week w-5 text-[#17A589]"></i>
+                    <span>Weekly Summary</span>
+                </a>
+                <a onclick="navigateTo('monthly')" id="nav-monthly" class="nav-item flex items-center gap-x-3 px-4 py-3 rounded-2xl text-sm font-medium hover:bg-[#0F3460]/50 transition-all ripple">
+                    <i class="fa-solid fa-calendar w-5 text-[#8E44AD]"></i>
+                    <span>Monthly Overview</span>
+                </a>
+                <a onclick="navigateTo('charts')" id="nav-charts" class="nav-item flex items-center gap-x-3 px-4 py-3 rounded-2xl text-sm font-medium hover:bg-[#0F3460]/50 transition-all ripple">
+                    <i class="fa-solid fa-chart-line w-5 text-[#F5A623]"></i>
+                    <span>Progress Charts</span>
+                </a>
+                <a onclick="navigateTo('achievements')" id="nav-achievements" class="nav-item flex items-center gap-x-3 px-4 py-3 rounded-2xl text-sm font-medium hover:bg-[#0F3460]/50 transition-all ripple">
+                    <i class="fa-solid fa-medal w-5 text-yellow-400"></i>
+                    <span>Achievements</span>
+                    <span id="achievements-count" class="ml-auto px-2 py-0.5 bg-yellow-400/20 text-yellow-400 rounded-full text-[10px]">0/12</span>
+                </a>
+            </nav>
+            
+            <div class="px-4 py-4 border-t border-[#0F3460]">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs text-gray-400">Total days logged</span>
+                    <span id="total-days-logged" class="font-mono text-xl text-white font-bold">0</span>
+                </div>
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs text-gray-400">Total XP Earned</span>
+                    <span id="total-xp-earned" class="font-mono text-lg text-[#E94560] font-bold">0</span>
+                </div>
+                <div onclick="clearAllData()" class="text-red-400 hover:text-red-300 cursor-pointer flex items-center gap-x-2 text-xs transition-colors">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>Reset all data</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 overflow-auto p-6" id="main-content">
+            <!-- Content populated by JS -->
+        </div>
+    </div>
+    
+    <!-- MOBILE BOTTOM NAV -->
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-[#16213E]/95 backdrop-blur-lg border-t border-[#0F3460] flex text-xs font-medium z-50">
+        <div onclick="navigateTo('dashboard')" class="flex-1 flex flex-col items-center py-3 text-white hover:text-[#E94560] transition">
+            <i class="fa-solid fa-gauge-high text-lg"></i>
+            <span class="mt-1">Home</span>
+        </div>
+        <div onclick="navigateTo('daily-log')" class="flex-1 flex flex-col items-center py-3 text-white hover:text-[#0070BA] transition">
+            <i class="fa-solid fa-calendar-day text-lg"></i>
+            <span class="mt-1">Log</span>
+        </div>
+        <div onclick="navigateTo('weekly')" class="flex-1 flex flex-col items-center py-3 text-white hover:text-[#17A589] transition">
+            <i class="fa-solid fa-calendar-week text-lg"></i>
+            <span class="mt-1">Week</span>
+        </div>
+        <div onclick="navigateTo('achievements')" class="flex-1 flex flex-col items-center py-3 text-white hover:text-yellow-400 transition">
+            <i class="fa-solid fa-medal text-lg"></i>
+            <span class="mt-1">Badges</span>
+        </div>
+    </div>
+    
+    <!-- DAILY LOG MODAL -->
+    <div onclick="if(event.target.id === 'daily-modal'){closeDailyModal()}" id="daily-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-end lg:items-center justify-center z-[9999]">
+        <div onclick="event.stopImmediatePropagation()" class="bg-gradient-to-b from-[#16213E] to-[#1A1A2E] w-full max-w-4xl lg:rounded-3xl rounded-t-3xl max-h-[94vh] lg:max-h-[90vh] overflow-hidden flex flex-col modal border border-[#E94560]/30">
+            
+            <div class="px-6 py-4 border-b border-[#0F3460] flex items-center justify-between sticky top-0 bg-[#16213E]/95 backdrop-blur-lg">
+                <div class="flex items-center gap-x-3">
+                    <h2 id="modal-title" class="text-2xl font-bold">New Daily Log</h2>
+                    <span id="modal-date-display" class="font-mono text-sm bg-[#1A1A2E] px-3 py-1 rounded-2xl border border-[#0F3460]"></span>
+                </div>
+                <div class="flex items-center gap-x-4">
+                    <div class="hidden md:flex items-center gap-x-2 text-sm text-gray-400">
+                        <i class="fa-solid fa-bolt text-yellow-400"></i>
+                        <span>+<span id="potential-xp">50</span> XP</span>
+                    </div>
+                    <button onclick="saveDailyLog()" class="px-6 py-2 bg-gradient-to-r from-[#E94560] to-[#533483] hover:opacity-90 rounded-2xl text-white font-medium flex items-center gap-x-2 transition-all glow-button">
+                        <i class="fa-solid fa-save"></i>
+                        <span>Save</span>
+                    </button>
+                    <button onclick="closeDailyModal()" class="text-gray-400 hover:text-white transition w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#0F3460]">
+                        <i class="fa-solid fa-xmark text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-auto p-6 space-y-8" id="daily-form-content">
+                <!-- DATE PICKER -->
+                <div class="glow-card p-6">
+                    <label class="text-sm font-medium mb-3 block flex items-center gap-x-2">
+                        <i class="fa-solid fa-calendar text-[#E94560]"></i>
+                        Date
+                    </label>
+                    <input type="date" id="log-date" class="w-full bg-[#1A1A2E] border border-[#0F3460] focus:border-[#E94560] rounded-2xl px-5 py-4 text-lg font-medium transition-all focus:ring-2 focus:ring-[#E94560]/30">
+                    <p id="date-warning" class="text-xs text-amber-400 mt-2 hidden flex items-center gap-x-1">
+                        <i class="fa-solid fa-exclamation-triangle"></i>
+                        This date already has a log. Editing existing data.
+                    </p>
+                </div>
+                
+                <!-- GCASH SECTION -->
+                <div class="glow-card p-6">
+                    <div class="flex justify-between items-baseline mb-4">
+                        <div class="flex items-center gap-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-[#0070BA]/20 flex items-center justify-center">
+                                <i class="fa-solid fa-wallet text-[#0070BA] text-xl"></i>
+                            </div>
+                            <div>
+                                <span class="text-[#0070BA] text-xl font-bold">GCash</span>
+                                <p class="text-xs text-gray-400">e-wallet transactions</p>
+                            </div>
+                        </div>
+                        <div class="text-xs bg-[#0070BA]/10 px-3 py-1 rounded-2xl text-[#0070BA] border border-[#0070BA]/30">
+                            <i class="fa-solid fa-info-circle mr-1"></i>
+                            Cash In = balance ↓ • Cash Out = balance ↑
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm mb-2 text-gray-300">Existing GCash Balance (₱)</label>
+                        <div class="flex items-center gap-x-3">
+                            <input id="gcash-existing" type="text" inputmode="decimal" class="flex-1 bg-[#1A1A2E] border border-[#0070BA]/30 focus:border-[#0070BA] rounded-2xl px-5 py-4 text-3xl font-mono text-center transition-all focus:ring-2 focus:ring-[#0070BA]/30" oninput="formatCurrency(this); recalculateGCash()">
+                            <div class="text-xs text-gray-400 leading-tight">before today's<br>transactions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-dashed border-[#0070BA]/30 rounded-3xl p-6 mb-6 bg-[#0070BA]/5">
+                        <div class="text-sm font-medium mb-3 flex items-center gap-x-2">
+                            <i class="fa-solid fa-plus-circle text-[#0070BA]"></i>
+                            Add Transaction
+                        </div>
+                        
+                        <div class="flex gap-x-2 mb-6" id="gcash-type-toggle">
+                            <button onclick="selectGCashType('CASH IN')" id="gcash-type-in" class="flex-1 py-4 rounded-2xl font-semibold border-2 border-transparent bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all">
+                                <i class="fa-solid fa-arrow-down mr-2"></i>CASH IN
+                            </button>
+                            <button onclick="selectGCashType('CASH OUT')" id="gcash-type-out" class="flex-1 py-4 rounded-2xl font-semibold border-2 border-transparent bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all">
+                                <i class="fa-solid fa-arrow-up mr-2"></i>CASH OUT
+                            </button>
+                        </div>
+                        
+                        <div id="gcash-fields" class="hidden grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="text-xs block mb-1 text-gray-400">Amount (₱)</label>
+                                <input id="gcash-amount" type="text" inputmode="decimal" placeholder="0.00" class="w-full bg-[#1A1A2E] border border-[#0F3460] rounded-2xl px-4 py-3 text-2xl font-mono text-center transition-all focus:border-[#0070BA] focus:ring-2 focus:ring-[#0070BA]/30" oninput="formatCurrency(this); calculateGCashSubtotal()">
+                            </div>
+                            <div>
+                                <label class="text-xs block mb-1 text-gray-400">Service Fee (₱)</label>
+                                <input id="gcash-fee" type="text" inputmode="decimal" placeholder="0.00" class="w-full bg-[#1A1A2E] border border-[#0F3460] rounded-2xl px-4 py-3 text-2xl font-mono text-center transition-all focus:border-[#0070BA] focus:ring-2 focus:ring-[#0070BA]/30" oninput="formatCurrency(this); calculateGCashSubtotal()">
+                            </div>
+                            <div>
+                                <label class="text-xs block mb-1 text-gray-400">Total</label>
+                                <div id="gcash-subtotal-display" class="w-full bg-[#0F3460]/50 rounded-2xl px-4 py-3 text-2xl font-mono text-center text-[#0070BA]">₱0.00</div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="addGCashTransaction()" id="add-gcash-btn" class="hidden w-full mt-4 bg-gradient-to-r from-[#0070BA] to-[#005c9e] hover:opacity-90 py-4 rounded-2xl text-white font-semibold transition-all">
+                            <i class="fa-solid fa-plus mr-2"></i>ADD TRANSACTION
+                        </button>
+                    </div>
+                    
+                    <div id="gcash-list" class="min-h-[120px] mb-6"></div>
+                    
+                    <div class="bg-[#1A1A2E] rounded-3xl p-5 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm border border-[#0F3460]">
+                        <div class="text-gray-400">Existing Balance: <span id="gcash-sum-existing" class="font-mono block text-2xl text-white">₱0.00</span></div>
+                        <div class="text-emerald-400">Total Cash In: <span id="gcash-sum-in" class="font-mono block text-2xl">₱0.00</span></div>
+                        <div class="text-red-400">Total Cash Out: <span id="gcash-sum-out" class="font-mono block text-2xl">₱0.00</span></div>
+                        <div class="col-span-2 md:col-span-1">
+                            <span class="text-[#0070BA]">GCash Net</span>
+                            <span id="gcash-net-display" class="font-mono text-4xl block">₱0.00</span>
+                        </div>
+                        <div class="text-gray-400">Service Fees: <span id="gcash-sum-fees" class="font-mono block text-2xl text-yellow-400">₱0.00</span></div>
+                        <div class="text-gray-400">Transactions: <span id="gcash-txn-count" class="font-mono block text-2xl text-white">0</span></div>
+                    </div>
+                </div>
+                
+                <!-- LAUNDRY SECTION -->
+                <div class="glow-card p-6">
+                    <div class="flex justify-between mb-4">
+                        <div class="flex items-center gap-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-[#17A589]/20 flex items-center justify-center">
+                                <i class="fa-solid fa-shirt text-[#17A589] text-xl"></i>
+                            </div>
+                            <div>
+                                <span class="text-[#17A589] text-xl font-bold">Laundry</span>
+                                <p class="text-xs text-gray-400">Log each customer separately</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-dashed border-[#17A589]/30 rounded-3xl p-6 mb-6 bg-[#17A589]/5 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs block mb-1 text-gray-400">Load Count</label>
+                            <input id="laundry-loads" type="number" min="1" value="1" class="w-full bg-[#1A1A2E] border border-[#0F3460] rounded-2xl px-4 py-3 text-3xl font-mono text-center transition-all focus:border-[#17A589] focus:ring-2 focus:ring-[#17A589]/30">
+                        </div>
+                        <div>
+                            <label class="text-xs block mb-1 text-gray-400">Price per Load (₱)</label>
+                            <input id="laundry-price" type="text" inputmode="decimal" placeholder="0.00" class="w-full bg-[#1A1A2E] border border-[#0F3460] rounded-2xl px-4 py-3 text-3xl font-mono text-center transition-all focus:border-[#17A589] focus:ring-2 focus:ring-[#17A589]/30" oninput="formatCurrency(this); calculateLaundrySubtotal()">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-xs block mb-1 text-gray-400">Subtotal</label>
+                            <div id="laundry-subtotal-display" class="text-4xl font-mono text-[#17A589] text-center">₱0.00</div>
+                        </div>
+                        <button onclick="addLaundryTransaction()" class="col-span-2 bg-gradient-to-r from-[#17A589] to-[#138f73] hover:opacity-90 py-4 rounded-2xl text-white font-semibold transition-all">
+                            <i class="fa-solid fa-plus mr-2"></i>ADD CUSTOMER
+                        </button>
+                    </div>
+                    
+                    <div id="laundry-list" class="min-h-[120px] mb-6"></div>
+                    
+                    <div class="bg-[#1A1A2E] rounded-3xl p-5 grid grid-cols-3 gap-4 text-sm border border-[#0F3460]">
+                        <div class="text-gray-400">Total Loads: <span id="laundry-total-loads" class="font-mono text-3xl block text-white">0</span></div>
+                        <div class="text-gray-400">Total Revenue: <span id="laundry-total-revenue" class="font-mono text-3xl block text-[#17A589]">₱0.00</span></div>
+                        <div class="text-gray-400">Customers: <span id="laundry-txn-count" class="font-mono text-3xl block text-white">0</span></div>
+                    </div>
+                </div>
+                
+                <!-- E-TRIKE SECTION -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glow-card p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-x-3">
+                                <div class="w-10 h-10 rounded-xl bg-[#8E44AD]/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-bolt text-[#8E44AD] text-xl"></i>
+                                </div>
+                                <span class="text-[#8E44AD] text-xl font-bold">E-Trike Echo</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-x-2 mb-6">
+                            <button onclick="toggleTrike('echo', true)" id="echo-yes" class="flex-1 py-5 rounded-3xl font-semibold text-white bg-[#1A1A2E] hover:bg-[#8E44AD] transition-all border border-[#8E44AD]/30">
+                                <i class="fa-solid fa-check mr-2"></i>YES
+                            </button>
+                            <button onclick="toggleTrike('echo', false)" id="echo-no" class="flex-1 py-5 rounded-3xl font-semibold text-white bg-[#1A1A2E] hover:bg-red-500/50 transition-all border border-red-500/30">
+                                <i class="fa-solid fa-xmark mr-2"></i>NO
+                            </button>
+                        </div>
+                        <div id="echo-earnings-container" class="hidden">
+                            <label class="text-xs text-gray-400">Earnings today (₱)</label>
+                            <input id="echo-earnings" type="text" inputmode="decimal" placeholder="0.00" class="w-full bg-[#1A1A2E] border border-[#0F3460] rounded-2xl px-6 py-5 text-4xl font-mono text-center mt-2 transition-all focus:border-[#8E44AD] focus:ring-2 focus:ring-[#8E44AD]/30" oninput="formatCurrency(this)">
+                        </div>
+                    </div>
+                    
+                    <div class="glow-card p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-x-3">
+                                <div class="w-10 h-10 rounded-xl bg-[#F5A623]/20 flex items-center justify-center">
+                                    <i class="fa-solid fa-bolt text-[#F5A623] text-xl"></i>
+                                </div>
+                                <span class="text-[#F5A623] text-xl font-bold">E-Trike Super</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-x-2 mb-6">
+                            <button onclick="toggleTrike('super', true)" id="super-yes" class="flex-1 py-5 rounded-3xl font-semibold text-white bg-[#1A1A2E] hover:bg-[#F5A623] transition-all border border-[#F5A623]/30">
+                                <i class="fa-solid fa-check mr-2"></i>YES
+                            </button>
+                            <button onclick="toggleTrike('super', false)" id="super-no" class="flex-1 py-5 rounded-3xl font-semibold text-white bg-[#1A1A2E] hover:bg-red-500/50 transition-all border border-red-500/30">
+                                <i class="fa-solid fa-xmark mr-2"></i>NO
+                            </button>
+                        </div>
+                        <div id="super-earnings-container" class="hidden">
+                            <label class="text-xs text-gray-400">Earnings today (₱)</label>
+                            <input id="super-earnings" type="text" inputmode="decimal" placeholder="0.00" class="w-full bg-[#1A1A2E] border border-[#0F3460] rounded-2xl px-6 py-5 text-4xl font-mono text-center mt-2 transition-all focus:border-[#F5A623] focus:ring-2 focus:ring-[#F5A623]/30" oninput="formatCurrency(this)">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- BILLS SECTION -->
+                <div class="glow-card p-6">
+                    <div class="flex justify-between mb-4">
+                        <div class="flex items-center gap-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-[#E67E22]/20 flex items-center justify-center">
+                                <i class="fa-solid fa-file-invoice-dollar text-[#E67E22] text-xl"></i>
+                            </div>
+                            <div>
+                                <span class="text-[#E67E22] text-xl font-bold">Bills Payment</span>
+                                <p class="text-xs text-gray-400">Cash only • Log each payment separately</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-dashed border-[#E67E22]/30 rounded-3xl p-6 mb-6 bg-[#E67E22]/5 grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="text-xs block mb-1 text-gray-400">Amount Collected (₱)</label>
+                            <input id="bills-collected" type="text" inputmode="decimal" placeholder="0.00" class="w-full bg-[#1A1A2E] border border-[#0F3460] rounded-2xl px-4 py-3 text-3xl font-mono text-center transition-all focus:border-[#E67E22] focus:ring-2 focus:ring-[#E67E22]/30" oninput="formatCurrency(this); calculateBillsSubtotal()">
+                        </div>
+                        <div>
+                            <label class="text-xs block mb-1 text-gray-400">Service Fee (₱)</label>
+                            <input id="bills-fee" type="text" inputmode="decimal" placeholder="0.00" class="w-full bg-[#1A1A2E] border border-[#0F3460] rounded-2xl px-4 py-3 text-3xl font-mono text-center transition-all focus:border-[#E67E22] focus:ring-2 focus:ring-[#E67E22]/30" oninput="formatCurrency(this); calculateBillsSubtotal()">
+                        </div>
+                        <div>
+                            <label class="text-xs block mb-1 text-gray-400">Total</label>
+                            <div id="bills-subtotal-display" class="text-4xl font-mono text-[#E67E22] text-center">₱0.00</div>
+                        </div>
+                        <button onclick="addBillsTransaction()" class="col-span-3 bg-gradient-to-r from-[#E67E22] to-[#d16c1b] hover:opacity-90 py-4 rounded-2xl text-white font-semibold transition-all">
+                            <i class="fa-solid fa-plus mr-2"></i>ADD TRANSACTION
+                        </button>
+                    </div>
+                    
+                    <div id="bills-list" class="min-h-[120px] mb-6"></div>
+                    
+                    <div class="bg-[#1A1A2E] rounded-3xl p-5 grid grid-cols-3 gap-4 text-sm border border-[#0F3460]">
+                        <div class="text-gray-400">Total Collected: <span id="bills-sum-collected" class="font-mono text-3xl block text-white">₱0.00</span></div>
+                        <div class="text-gray-400">Total Fees: <span id="bills-sum-fees" class="font-mono text-3xl block text-yellow-400">₱0.00</span></div>
+                        <div class="text-gray-400">Grand Total: <span id="bills-grand-total" class="font-mono text-3xl block text-[#E67E22]">₱0.00</span></div>
+                        <div class="col-span-3 text-right text-gray-400">Transactions: <span id="bills-txn-count" class="font-mono text-3xl text-white">0</span></div>
+                    </div>
+                </div>
+                
+                <!-- NOTES -->
+                <div class="glow-card p-6">
+                    <label class="text-sm font-medium mb-3 block flex items-center gap-x-2">
+                        <i class="fa-solid fa-note-sticky text-[#E94560]"></i>
+                        Notes / Observations
+                    </label>
+                    <textarea id="daily-notes" rows="3" class="w-full bg-[#1A1A2E] border border-[#0F3460] rounded-3xl px-5 py-4 text-sm resize-none transition-all focus:border-[#E94560] focus:ring-2 focus:ring-[#E94560]/30" placeholder="Add any notes for today..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TOAST -->
+    <div id="toast" onclick="this.classList.add('hidden')" class="hidden fixed bottom-8 right-8 bg-gradient-to-r from-[#E94560] to-[#533483] text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-x-3 toast z-[9999] border border-white/10">
+        <i class="fa-solid fa-check-circle text-xl"></i>
+        <span id="toast-text" class="font-medium"></span>
+    </div>
+    
+    <!-- PROFILE MODAL -->
+    <div onclick="if(event.target.id==='profile-modal')hideProfile()" id="profile-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[10000] flex items-center justify-center">
+        <div class="glow-card p-8 max-w-sm w-full mx-4 text-center modal">
+            <div class="w-20 h-20 mx-auto bg-gradient-to-br from-[#0070BA] to-[#533483] rounded-3xl flex items-center justify-center text-white font-bold text-3xl mb-4">Z</div>
+            <h3 class="font-bold text-2xl mb-2">ZaiBill Pro</h3>
+            <p class="text-gray-400 text-sm mb-6">Single user • All data stored locally</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-[#1A1A2E] rounded-2xl p-4">
+                    <div class="text-2xl font-bold text-[#E94560]" id="profile-level">1</div>
+                    <div class="text-xs text-gray-400">Level</div>
+                </div>
+                <div class="bg-[#1A1A2E] rounded-2xl p-4">
+                    <div class="text-2xl font-bold text-yellow-400" id="profile-xp">0</div>
+                    <div class="text-xs text-gray-400">Total XP</div>
+                </div>
+            </div>
+            
+            <button onclick="hideProfile();clearAllData()" class="text-red-400 hover:text-red-300 text-sm flex items-center mx-auto gap-x-2 transition-colors">
+                <i class="fa-solid fa-trash-can"></i> Clear everything
+            </button>
+            <div class="text-[10px] text-gray-500 mt-6">Version 6.0 GAMIFIED • Pure HTML + JS</div>
+        </div>
+    </div>
+
+    <script>
+        // ============== PARTICLE SYSTEM ==============
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                
+                const colors = ['rgba(233, 69, 96, 0.6)', 'rgba(83, 52, 131, 0.6)', 'rgba(0, 112, 186, 0.6)', 'rgba(255, 215, 0, 0.4)'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.boxShadow = `0 0 10px ${particle.style.background}`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // ============== CONFETTI SYSTEM ==============
+        function createConfetti() {
+            const colors = ['#E94560', '#FFD700', '#10B981', '#8B5CF6', '#0070BA', '#F5A623'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                document.body.appendChild(confetti);
+                
+                const duration = 2 + Math.random() * 2;
+                confetti.animate([
+                    { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translateY(${window.innerHeight}px) rotate(${720 + Math.random() * 720}deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => confetti.remove();
+            }
+        }
+        
+        // ============== COIN ANIMATION ==============
+        function spawnCoin(x, y, amount = 10) {
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            coin.textContent = '+' + amount;
+            coin.style.left = x + 'px';
+            coin.style.top = y + 'px';
+            document.body.appendChild(coin);
+            setTimeout(() => coin.remove(), 1000);
+        }
+        
+        // ============== XP & LEVEL SYSTEM ==============
+        const LEVEL_NAMES = ['Rookie', 'Entrepreneur', 'Hustler', 'Business Owner', 'Tycoon', 'Mogul', 'Legend'];
+        
+        function getXpForLevel(level) {
+            return Math.floor(100 * Math.pow(1.5, level - 1));
+        }
+        
+        function addXp(amount, source = '') {
+            if (!DB.gameStats) DB.gameStats = { xp: 0, level: 1, totalXpEarned: 0 };
+            
+            const oldLevel = DB.gameStats.level;
+            DB.gameStats.xp += amount;
+            DB.gameStats.totalXpEarned += amount;
+            
+            // Check for level up
+            while (DB.gameStats.xp >= getXpForLevel(DB.gameStats.level)) {
+                DB.gameStats.xp -= getXpForLevel(DB.gameStats.level);
+                DB.gameStats.level++;
+            }
+            
+            // Show level up modal
+            if (DB.gameStats.level > oldLevel) {
+                showLevelUp(DB.gameStats.level);
+            }
+            
+            updateXpDisplay();
+            saveDB();
+        }
+        
+        function updateXpDisplay() {
+            if (!DB.gameStats) DB.gameStats = { xp: 0, level: 1, totalXpEarned: 0 };
+            
+            const level = DB.gameStats.level;
+            const xp = DB.gameStats.xp;
+            const needed = getXpForLevel(level);
+            const percent = (xp / needed) * 100;
+            
+            document.getElementById('level-badge').textContent = level;
+            document.getElementById('level-name').textContent = LEVEL_NAMES[Math.min(level - 1, LEVEL_NAMES.length - 1)];
+            document.getElementById('current-xp').textContent = xp;
+            document.getElementById('xp-needed').textContent = needed;
+            document.getElementById('xp-bar').style.width = percent + '%';
+            document.getElementById('total-xp-earned').textContent = DB.gameStats.totalXpEarned;
+            document.getElementById('profile-level').textContent = level;
+            document.getElementById('profile-xp').textContent = DB.gameStats.totalXpEarned;
+        }
+        
+        function showLevelUp(newLevel) {
+            document.getElementById('new-level').textContent = 'Level ' + newLevel;
+            const modal = document.getElementById('levelup-modal');
+            modal.classList.add('active');
+            createConfetti();
+            setTimeout(() => modal.classList.remove('active'), 3000);
+        }
+        
+        // ============== STREAK SYSTEM ==============
+        function updateStreak() {
+            if (!DB.gameStats) DB.gameStats = { xp: 0, level: 1, totalXpEarned: 0, lastLogDate: null, streak: 0 };
+            
+            const today = getToday();
+            const lastLog = DB.gameStats.lastLogDate;
+            
+            if (lastLog) {
+                const lastDate = new Date(lastLog);
+                const todayDate = new Date(today);
+                const diffDays = Math.floor((todayDate - lastDate) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    // Consecutive day
+                    DB.gameStats.streak = (DB.gameStats.streak || 0) + 1;
+                } else if (diffDays > 1) {
+                    // Streak broken
+                    DB.gameStats.streak = 1;
+                }
+            } else {
+                DB.gameStats.streak = 1;
+            }
+            
+            DB.gameStats.lastLogDate = today;
+            document.getElementById('streak-count').textContent = DB.gameStats.streak || 0;
+            
+            // Streak bonus XP
+            const streak = DB.gameStats.streak || 0;
+            if (streak > 1) {
+                const bonusXp = Math.min(streak * 5, 50);
+                addXp(bonusXp, 'streak bonus');
+                showToast(`🔥 ${streak} day streak! +${bonusXp} XP bonus`);
+            }
+            
+            saveDB();
+        }
+        
+        // ============== ACHIEVEMENT SYSTEM ==============
+        const ACHIEVEMENTS = {
+            first_log: { name: 'First Steps', desc: 'Log your first day', icon: '🌟', xp: 50 },
+            week_warrior: { name: 'Week Warrior', desc: 'Log 7 consecutive days', icon: '🔥', xp: 100 },
+            month_master: { name: 'Month Master', desc: 'Log 30 days total', icon: '📅', xp: 200 },
+            gcash_guru: { name: 'GCash Guru', desc: 'Complete 50 GCash transactions', icon: '💳', xp: 150 },
+            laundry_legend: { name: 'Laundry Legend', desc: 'Process 100 laundry loads', icon: '👕', xp: 150 },
+            trike_titan: { name: 'Trike Titan', desc: 'Earn ₱10,000 from E-Trikes', icon: '🛺', xp: 200 },
+            bill_boss: { name: 'Bill Boss', desc: 'Process 50 bill payments', icon: '📄', xp: 150 },
+            perfect_week: { name: 'Perfect Week', desc: 'Log all 7 days in a week', icon: '✨', xp: 300 },
+            rich_roller: { name: 'Rich Roller', desc: 'Earn ₱50,000 total revenue', icon: '💰', xp: 500 },
+            fee_collector: { name: 'Fee Collector', desc: 'Collect ₱5,000 in service fees', icon: '💵', xp: 200 },
+            daily_grinder: { name: 'Daily Grinder', desc: 'Complete daily goal 5 times', icon: '⚡', xp: 250 },
+            centurion: { name: 'Centurion', desc: 'Log 100 days total', icon: '👑', xp: 1000 }
+        };
+        
+        function checkAchievements() {
+            if (!DB.achievements) DB.achievements = {};
+            if (!DB.gameStats) DB.gameStats = { dailyGoalsCompleted: 0 };
+            
+            const totalDays = Object.keys(DB.dailyLogs).length;
+            const streak = DB.gameStats.streak || 0;
+            
+            // Count transactions
+            let gcashCount = 0, laundryLoads = 0, billCount = 0;
+            let trikeEarnings = 0, totalRevenue = 0, totalFees = 0;
+            
+            Object.values(DB.dailyLogs).forEach(log => {
+                gcashCount += log.gcash_transaction_count || 0;
+                laundryLoads += log.laundry_total_loads || 0;
+                billCount += log.bills_transaction_count || 0;
+                trikeEarnings += (log.etrike_echo_earnings || 0) + (log.etrike_super_earnings || 0);
+                totalRevenue += (log.laundry_total_revenue || 0) + trikeEarnings;
+                totalFees += (log.gcash_total_service_fees || 0) + (log.bills_total_service_fee || 0);
+            });
+            
+            // Check each achievement
+            const checks = {
+                first_log: totalDays >= 1,
+                week_warrior: streak >= 7,
+                month_master: totalDays >= 30,
+                gcash_guru: gcashCount >= 50,
+                laundry_legend: laundryLoads >= 100,
+                trike_titan: trikeEarnings >= 10000,
+                bill_boss: billCount >= 50,
+                perfect_week: streak >= 7,
+                rich_roller: totalRevenue >= 50000,
+                fee_collector: totalFees >= 5000,
+                daily_grinder: (DB.gameStats.dailyGoalsCompleted || 0) >= 5,
+                centurion: totalDays >= 100
+            };
+            
+            let newUnlocks = 0;
+            Object.entries(checks).forEach(([key, unlocked]) => {
+                if (unlocked && !DB.achievements[key]) {
+                    unlockAchievement(key);
+                    newUnlocks++;
+                }
+            });
+            
+            if (newUnlocks > 0) {
+                document.getElementById('badge-notification').classList.remove('hidden');
+            }
+            
+            updateAchievementCount();
+        }
+        
+        function unlockAchievement(key) {
+            const ach = ACHIEVEMENTS[key];
+            DB.achievements[key] = { unlocked: true, date: getToday() };
+            
+            // Show modal
+            document.getElementById('achievement-icon').textContent = ach.icon;
+            document.getElementById('achievement-name').textContent = ach.name;
+            document.getElementById('achievement-desc').textContent = ach.desc;
+            document.getElementById('achievement-xp').textContent = ach.xp;
+            
+            const modal = document.getElementById('achievement-modal');
+            modal.classList.add('active');
+            createConfetti();
+            
+            addXp(ach.xp, 'achievement');
+            
+            setTimeout(() => modal.classList.remove('active'), 4000);
+            saveDB();
+        }
+        
+        function updateAchievementCount() {
+            const total = Object.keys(ACHIEVEMENTS).length;
+            const unlocked = DB.achievements ? Object.keys(DB.achievements).length : 0;
+            document.getElementById('achievements-count').textContent = `${unlocked}/${total}`;
+        }
+        
+        function showAchievements() {
+            document.getElementById('badge-notification').classList.add('hidden');
+            navigateTo('achievements');
+        }
+        
+        // ============== DAILY GOAL SYSTEM ==============
+        function updateDailyGoal() {
+            const today = getToday();
+            let txnCount = 0;
+            
+            if (DB.gcashTxns[today]) txnCount += DB.gcashTxns[today].length;
+            if (DB.laundryTxns[today]) txnCount += DB.laundryTxns[today].length;
+            if (DB.billsTxns[today]) txnCount += DB.billsTxns[today].length;
+            
+            const goal = 5;
+            const percent = Math.min((txnCount / goal) * 100, 100);
+            
+            document.getElementById('daily-goal-bar').style.width = percent + '%';
+            document.getElementById('goal-progress-text').textContent = `${txnCount}/${goal}`;
+            
+            // Check if goal just completed
+            if (txnCount === goal && !DB.gameStats?.dailyGoalCompletedToday) {
+                if (!DB.gameStats) DB.gameStats = {};
+                DB.gameStats.dailyGoalCompletedToday = true;
+                DB.gameStats.dailyGoalsCompleted = (DB.gameStats.dailyGoalsCompleted || 0) + 1;
+                addXp(100, 'daily goal');
+                showToast('🎯 Daily Goal Complete! +100 XP');
+                createConfetti();
+                saveDB();
+            }
+        }
+        
+        // ============== GLOBAL STATE & DATABASE ==============
+        let DB = {
+            dailyLogs: {},
+            gcashTxns: {},
+            laundryTxns: {},
+            billsTxns: {},
+            gameStats: { xp: 0, level: 1, totalXpEarned: 0, streak: 0, lastLogDate: null, dailyGoalsCompleted: 0 },
+            achievements: {}
+        };
+        
+        function loadDB() {
+            const saved = localStorage.getItem('zaibillDB_v2');
+            if (saved) {
+                DB = JSON.parse(saved);
+            }
+            if (!DB.dailyLogs) DB.dailyLogs = {};
+            if (!DB.gcashTxns) DB.gcashTxns = {};
+            if (!DB.laundryTxns) DB.laundryTxns = {};
+            if (!DB.billsTxns) DB.billsTxns = {};
+            if (!DB.gameStats) DB.gameStats = { xp: 0, level: 1, totalXpEarned: 0, streak: 0, lastLogDate: null, dailyGoalsCompleted: 0 };
+            if (!DB.achievements) DB.achievements = {};
+        }
+        
+        function saveDB() {
+            localStorage.setItem('zaibillDB_v2', JSON.stringify(DB));
+        }
+        
+        // ============== UTILITY FUNCTIONS ==============
+        function formatCurrency(input) {
+            let val = input.value.replace(/[^0-9.]/g, '');
+            if (val) {
+                const num = parseFloat(val);
+                input.value = num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+        }
+        
+        function parseCurrency(str) {
+            return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerHTML = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+        
+        function getToday() {
+            const d = new Date();
+            return d.toISOString().split('T')[0];
+        }
+        
+        function getDayName(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleString('en-US', { weekday: 'long' });
+        }
+        
+        function getWeekLabel(dateStr) {
+            const date = new Date(dateStr);
+            const year = date.getFullYear();
+            const week = Math.ceil(((date - new Date(year, 0, 1)) / 86400000 + 1) / 7);
+            return `${year}-W${week.toString().padStart(2, '0')}`;
+        }
+        
+        // ============== CALCULATIONS ==============
+        function recalculateGCash(date) {
+            const existing = parseCurrency(document.getElementById('gcash-existing').value || '0');
+            let cashIn = 0, cashOut = 0, fees = 0, count = 0;
+            
+            if (DB.gcashTxns[date]) {
+                DB.gcashTxns[date].forEach(t => {
+                    count++;
+                    fees += parseFloat(t.service_fee);
+                    if (t.type === 'CASH IN') cashIn += parseFloat(t.amount);
+                    else cashOut += parseFloat(t.amount);
+                });
+            }
+            
+            const net = existing - cashIn + cashOut;
+            
+            document.getElementById('gcash-sum-existing').textContent = '₱' + existing.toLocaleString('en-US', {minimumFractionDigits:2});
+            document.getElementById('gcash-sum-in').textContent = '₱' + cashIn.toLocaleString('en-US', {minimumFractionDigits:2});
+            document.getElementById('gcash-sum-out').textContent = '₱' + cashOut.toLocaleString('en-US', {minimumFractionDigits:2});
+            const netEl = document.getElementById('gcash-net-display');
+            netEl.textContent = '₱' + net.toLocaleString('en-US', {minimumFractionDigits:2});
+            netEl.style.color = net >= 0 ? '#10B981' : '#EF4444';
+            document.getElementById('gcash-sum-fees').textContent = '₱' + fees.toLocaleString('en-US', {minimumFractionDigits:2});
+            document.getElementById('gcash-txn-count').textContent = count;
+            
+            return { existing, cashIn, cashOut, fees, net, count };
+        }
+        
+        function calculateGCashSubtotal() {
+            const amt = parseCurrency(document.getElementById('gcash-amount').value || '0');
+            const fee = parseCurrency(document.getElementById('gcash-fee').value || '0');
+            document.getElementById('gcash-subtotal-display').textContent = '₱' + (amt + fee).toLocaleString('en-US', {minimumFractionDigits:2});
+        }
+        
+        function calculateLaundrySubtotal() {
+            const loads = parseInt(document.getElementById('laundry-loads').value) || 0;
+            const price = parseCurrency(document.getElementById('laundry-price').value || '0');
+            document.getElementById('laundry-subtotal-display').textContent = '₱' + (loads * price).toLocaleString('en-US', {minimumFractionDigits:2});
+        }
+        
+        function calculateBillsSubtotal() {
+            const collected = parseCurrency(document.getElementById('bills-collected').value || '0');
+            const fee = parseCurrency(document.getElementById('bills-fee').value || '0');
+            document.getElementById('bills-subtotal-display').textContent = '₱' + (collected + fee).toLocaleString('en-US', {minimumFractionDigits:2});
+        }
+        
+        // ============== GCASH TRANSACTION HANDLERS ==============
+        let currentGCashType = null;
+        
+        function selectGCashType(type) {
+            currentGCashType = type;
+            document.getElementById('gcash-type-in').classList.toggle('ring-2', type === 'CASH IN');
+            document.getElementById('gcash-type-in').classList.toggle('ring-emerald-400', type === 'CASH IN');
+            document.getElementById('gcash-type-out').classList.toggle('ring-2', type === 'CASH OUT');
+            document.getElementById('gcash-type-out').classList.toggle('ring-red-400', type === 'CASH OUT');
+            
+            document.getElementById('gcash-fields').classList.remove('hidden');
+            document.getElementById('add-gcash-btn').classList.remove('hidden');
+        }
+        
+        function addGCashTransaction() {
+            const date = document.getElementById('log-date').value;
+            if (!date || !currentGCashType) return;
+            
+            const amount = parseCurrency(document.getElementById('gcash-amount').value);
+            const fee = parseCurrency(document.getElementById('gcash-fee').value);
+            
+            if (!DB.gcashTxns[date]) DB.gcashTxns[date] = [];
+            
+            DB.gcashTxns[date].push({
+                id: Date.now(),
+                type: currentGCashType,
+                amount: amount,
+                service_fee: fee,
+                transaction_total: amount + fee
+            });
+            
+            // Reset form
+            currentGCashType = null;
+            document.getElementById('gcash-type-in').classList.remove('ring-2', 'ring-emerald-400');
+            document.getElementById('gcash-type-out').classList.remove('ring-2', 'ring-red-400');
+            document.getElementById('gcash-fields').classList.add('hidden');
+            document.getElementById('add-gcash-btn').classList.add('hidden');
+            document.getElementById('gcash-amount').value = '';
+            document.getElementById('gcash-fee').value = '';
+            
+            renderGCashList(date);
+            recalculateGCash(date);
+            
+            // XP and effects
+            addXp(10, 'gcash transaction');
+            spawnCoin(window.innerWidth / 2, window.innerHeight / 2, 10);
+            updateDailyGoal();
+            
+            saveDB();
+            showToast('💳 GCash transaction added! +10 XP');
+        }
+        
+        function renderGCashList(date) {
+            const container = document.getElementById('gcash-list');
+            container.innerHTML = `<div class="text-xs font-medium text-gray-400 mb-3 uppercase tracking-wider">Transactions Today</div>`;
+            
+            if (!DB.gcashTxns[date] || DB.gcashTxns[date].length === 0) {
+                container.innerHTML += `<div class="text-center py-8 text-gray-500 italic bg-[#1A1A2E]/50 rounded-2xl">No GCash transactions yet</div>`;
+                return;
+            }
+            
+            let html = `<div class="space-y-2">`;
+            DB.gcashTxns[date].forEach((t, i) => {
+                const color = t.type === 'CASH IN' ? 'emerald' : 'red';
+                html += `
+                <div class="flex items-center justify-between bg-[#1A1A2E] rounded-2xl px-4 py-3 text-sm border border-[#0F3460] hover:border-[#0070BA]/30 transition-all">
+                    <div class="flex items-center gap-x-4">
+                        <span class="font-mono w-6 text-gray-500">${i+1}</span>
+                        <span class="px-3 py-px rounded-full text-xs font-semibold bg-${color}-400/10 text-${color}-400">${t.type}</span>
+                        <span class="font-medium">₱${parseFloat(t.amount).toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                        <span class="text-gray-500 text-xs">Fee ₱${parseFloat(t.service_fee).toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                    </div>
+                    <div class="flex items-center gap-x-6">
+                        <span class="font-semibold text-[#0070BA]">₱${parseFloat(t.transaction_total).toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                        <button onclick="deleteGCashTxn('${date}', ${t.id});" class="text-red-400 hover:text-red-300 transition"><i class="fa-solid fa-circle-xmark"></i></button>
+                    </div>
+                </div>`;
+            });
+            html += `</div>`;
+            container.innerHTML += html;
+        }
+        
+        function deleteGCashTxn(date, id) {
+            if (confirm('Delete this GCash transaction?')) {
+                DB.gcashTxns[date] = DB.gcashTxns[date].filter(t => t.id !== id);
+                renderGCashList(date);
+                recalculateGCash(date);
+                updateDailyGoal();
+                saveDB();
+            }
+        }
+        
+        // ============== LAUNDRY ==============
+        function addLaundryTransaction() {
+            const date = document.getElementById('log-date').value;
+            if (!date) return;
+            
+            const loads = parseInt(document.getElementById('laundry-loads').value) || 0;
+            const price = parseCurrency(document.getElementById('laundry-price').value);
+            
+            if (!DB.laundryTxns[date]) DB.laundryTxns[date] = [];
+            
+            DB.laundryTxns[date].push({
+                id: Date.now(),
+                load_count: loads,
+                price_per_load: price,
+                subtotal: loads * price
+            });
+            
+            document.getElementById('laundry-loads').value = 1;
+            document.getElementById('laundry-price').value = '';
+            renderLaundryList(date);
+            
+            addXp(15, 'laundry');
+            spawnCoin(window.innerWidth / 2, window.innerHeight / 2, 15);
+            updateDailyGoal();
+            
+            saveDB();
+            showToast('👕 Laundry customer added! +15 XP');
+        }
+        
+        function renderLaundryList(date) {
+            const container = document.getElementById('laundry-list');
+            container.innerHTML = `<div class="text-xs font-medium text-gray-400 mb-3 uppercase tracking-wider">Customers Today</div>`;
+            
+            if (!DB.laundryTxns[date] || DB.laundryTxns[date].length === 0) {
+                container.innerHTML += `<div class="text-center py-8 text-gray-500 italic bg-[#1A1A2E]/50 rounded-2xl">No laundry customers yet</div>`;
+                document.getElementById('laundry-total-loads').textContent = 0;
+                document.getElementById('laundry-total-revenue').textContent = '₱0.00';
+                document.getElementById('laundry-txn-count').textContent = 0;
+                return;
+            }
+            
+            let totalLoads = 0, totalRev = 0;
+            
+            let html = `<div class="space-y-2">`;
+            DB.laundryTxns[date].forEach((t, i) => {
+                totalLoads += t.load_count;
+                totalRev += t.subtotal;
+                html += `
+                <div class="flex items-center justify-between bg-[#1A1A2E] rounded-2xl px-4 py-3 text-sm border border-[#0F3460] hover:border-[#17A589]/30 transition-all">
+                    <div class="flex items-center gap-x-4">
+                        <span class="font-mono w-6 text-gray-500">${i+1}</span>
+                        <span>${t.load_count} loads</span>
+                        <span class="text-gray-500 text-xs">@ ₱${parseFloat(t.price_per_load).toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                    </div>
+                    <div class="flex items-center gap-x-6">
+                        <span class="font-semibold text-[#17A589]">₱${parseFloat(t.subtotal).toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                        <button onclick="deleteLaundryTxn('${date}', ${t.id});" class="text-red-400 hover:text-red-300 transition"><i class="fa-solid fa-circle-xmark"></i></button>
+                    </div>
+                </div>`;
+            });
+            html += `</div>`;
+            container.innerHTML += html;
+            
+            document.getElementById('laundry-total-loads').textContent = totalLoads;
+            document.getElementById('laundry-total-revenue').textContent = '₱' + totalRev.toLocaleString('en-US', {minimumFractionDigits:2});
+            document.getElementById('laundry-txn-count').textContent = DB.laundryTxns[date].length;
+        }
+        
+        function deleteLaundryTxn(date, id) {
+            if (confirm('Delete this laundry entry?')) {
+                DB.laundryTxns[date] = DB.laundryTxns[date].filter(t => t.id !== id);
+                renderLaundryList(date);
+                updateDailyGoal();
+                saveDB();
+            }
+        }
+        
+        // ============== BILLS ==============
+        function addBillsTransaction() {
+            const date = document.getElementById('log-date').value;
+            if (!date) return;
+            
+            const collected = parseCurrency(document.getElementById('bills-collected').value);
+            const fee = parseCurrency(document.getElementById('bills-fee').value);
+            
+            if (!DB.billsTxns[date]) DB.billsTxns[date] = [];
+            
+            DB.billsTxns[date].push({
+                id: Date.now(),
+                amount_collected: collected,
+                service_fee: fee,
+                transaction_total: collected + fee
+            });
+            
+            document.getElementById('bills-collected').value = '';
+            document.getElementById('bills-fee').value = '';
+            renderBillsList(date);
+            
+            addXp(12, 'bills');
+            spawnCoin(window.innerWidth / 2, window.innerHeight / 2, 12);
+            updateDailyGoal();
+            
+            saveDB();
+            showToast('📄 Bill payment added! +12 XP');
+        }
+        
+        function renderBillsList(date) {
+            const container = document.getElementById('bills-list');
+            container.innerHTML = `<div class="text-xs font-medium text-gray-400 mb-3 uppercase tracking-wider">Transactions Today</div>`;
+            
+            if (!DB.billsTxns[date] || DB.billsTxns[date].length === 0) {
+                container.innerHTML += `<div class="text-center py-8 text-gray-500 italic bg-[#1A1A2E]/50 rounded-2xl">No bill payments yet</div>`;
+                document.getElementById('bills-sum-collected').textContent = '₱0.00';
+                document.getElementById('bills-sum-fees').textContent = '₱0.00';
+                document.getElementById('bills-grand-total').textContent = '₱0.00';
+                document.getElementById('bills-txn-count').textContent = 0;
+                return;
+            }
+            
+            let totalCollected = 0, totalFee = 0;
+            
+            let html = `<div class="space-y-2">`;
+            DB.billsTxns[date].forEach((t, i) => {
+                totalCollected += t.amount_collected;
+                totalFee += t.service_fee;
+                html += `
+                <div class="flex items-center justify-between bg-[#1A1A2E] rounded-2xl px-4 py-3 text-sm border border-[#0F3460] hover:border-[#E67E22]/30 transition-all">
+                    <div class="flex items-center gap-x-4">
+                        <span class="font-mono w-6 text-gray-500">${i+1}</span>
+                        <span>Collected ₱${parseFloat(t.amount_collected).toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                    </div>
+                    <div class="flex items-center gap-x-6">
+                        <span class="text-gray-500 text-xs">Fee ₱${parseFloat(t.service_fee).toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                        <span class="font-semibold text-[#E67E22]">₱${parseFloat(t.transaction_total).toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+                        <button onclick="deleteBillsTxn('${date}', ${t.id});" class="text-red-400 hover:text-red-300 transition"><i class="fa-solid fa-circle-xmark"></i></button>
+                    </div>
+                </div>`;
+            });
+            html += `</div>`;
+            container.innerHTML += html;
+            
+            document.getElementById('bills-sum-collected').textContent = '₱' + totalCollected.toLocaleString('en-US', {minimumFractionDigits:2});
+            document.getElementById('bills-sum-fees').textContent = '₱' + totalFee.toLocaleString('en-US', {minimumFractionDigits:2});
+            document.getElementById('bills-grand-total').textContent = '₱' + (totalCollected + totalFee).toLocaleString('en-US', {minimumFractionDigits:2});
+            document.getElementById('bills-txn-count').textContent = DB.billsTxns[date].length;
+        }
+        
+        function deleteBillsTxn(date, id) {
+            if (confirm('Delete this bill transaction?')) {
+                DB.billsTxns[date] = DB.billsTxns[date].filter(t => t.id !== id);
+                renderBillsList(date);
+                updateDailyGoal();
+                saveDB();
+            }
+        }
+        
+        // ============== E-TRIKE ==============
+        function toggleTrike(trike, yes) {
+            const date = document.getElementById('log-date').value;
+            if (!date) return;
+            
+            const keyOperated = trike === 'echo' ? 'etrike_echo_operated' : 'etrike_super_operated';
+            const keyEarnings = trike === 'echo' ? 'etrike_echo_earnings' : 'etrike_super_earnings';
+            
+            if (!DB.dailyLogs[date]) DB.dailyLogs[date] = {};
+            
+            DB.dailyLogs[date][keyOperated] = yes ? 'YES' : 'NO';
+            
+            const container = document.getElementById(trike + '-earnings-container');
+            const yesBtn = document.getElementById(trike + '-yes');
+            const noBtn = document.getElementById(trike + '-no');
+            
+            if (yes) {
+                container.classList.remove('hidden');
+                yesBtn.classList.add('ring-2', trike === 'echo' ? 'ring-[#8E44AD]' : 'ring-[#F5A623]');
+                noBtn.classList.remove('ring-2', 'ring-red-400');
+            } else {
+                container.classList.add('hidden');
+                yesBtn.classList.remove('ring-2', trike === 'echo' ? 'ring-[#8E44AD]' : 'ring-[#F5A623]');
+                noBtn.classList.add('ring-2', 'ring-red-400');
+                if (DB.dailyLogs[date][keyEarnings]) delete DB.dailyLogs[date][keyEarnings];
+            }
+        }
+        
+        // ============== SAVE / LOAD DAILY LOG ==============
+        function saveDailyLog() {
+            const date = document.getElementById('log-date').value;
+            if (!date) return;
+            
+            const isNewLog = !DB.dailyLogs[date];
+            
+            if (!DB.dailyLogs[date]) DB.dailyLogs[date] = {};
+            
+            DB.dailyLogs[date].date = date;
+            DB.dailyLogs[date].day_of_week = getDayName(date);
+            DB.dailyLogs[date].gcash_existing_balance = parseCurrency(document.getElementById('gcash-existing').value);
+            DB.dailyLogs[date].notes = document.getElementById('daily-notes').value || '';
+            
+            const echoEarnings = parseCurrency(document.getElementById('echo-earnings').value || '0');
+            const superEarnings = parseCurrency(document.getElementById('super-earnings').value || '0');
+            
+            if (DB.dailyLogs[date].etrike_echo_operated === 'YES') DB.dailyLogs[date].etrike_echo_earnings = echoEarnings;
+            if (DB.dailyLogs[date].etrike_super_operated === 'YES') DB.dailyLogs[date].etrike_super_earnings = superEarnings;
+            
+            const gc = recalculateGCash(date);
+            DB.dailyLogs[date].gcash_total_cash_in_amount = gc.cashIn;
+            DB.dailyLogs[date].gcash_total_cash_out_amount = gc.cashOut;
+            DB.dailyLogs[date].gcash_total_service_fees = gc.fees;
+            DB.dailyLogs[date].gcash_net = gc.net;
+            DB.dailyLogs[date].gcash_transaction_count = gc.count;
+            
+            const laundryTotalRev = parseCurrency(document.getElementById('laundry-total-revenue').textContent);
+            DB.dailyLogs[date].laundry_total_loads = parseInt(document.getElementById('laundry-total-loads').textContent) || 0;
+            DB.dailyLogs[date].laundry_total_revenue = laundryTotalRev;
+            DB.dailyLogs[date].laundry_transaction_count = DB.laundryTxns[date] ? DB.laundryTxns[date].length : 0;
+            
+            const billsCollected = parseCurrency(document.getElementById('bills-sum-collected').textContent);
+            const billsFees = parseCurrency(document.getElementById('bills-sum-fees').textContent);
+            DB.dailyLogs[date].bills_total_collected = billsCollected;
+            DB.dailyLogs[date].bills_total_service_fee = billsFees;
+            DB.dailyLogs[date].bills_grand_total = billsCollected + billsFees;
+            DB.dailyLogs[date].bills_transaction_count = DB.billsTxns[date] ? DB.billsTxns[date].length : 0;
+            
+            // Update streak and give XP
+            if (isNewLog) {
+                updateStreak();
+                addXp(50, 'daily log');
+                createConfetti();
+            }
+            
+            saveDB();
+            closeDailyModal();
+            showToast(isNewLog ? '✅ Daily log saved! +50 XP' : '✅ Daily log updated!');
+            checkAchievements();
+            renderDashboard();
+            if (currentPage === 'daily-log') renderDailyLogList();
+        }
+        
+        function openDailyLog(date = null) {
+            if (!date) date = getToday();
+            
+            document.getElementById('log-date').value = date;
+            document.getElementById('modal-date-display').innerHTML = `<span class="text-[#E94560]">${date}</span> • ${getDayName(date)}`;
+            
+            document.getElementById('gcash-existing').value = '0.00';
+            document.getElementById('daily-notes').value = '';
+            currentGCashType = null;
+            document.getElementById('gcash-fields').classList.add('hidden');
+            document.getElementById('add-gcash-btn').classList.add('hidden');
+            document.getElementById('gcash-type-in').classList.remove('ring-2', 'ring-emerald-400');
+            document.getElementById('gcash-type-out').classList.remove('ring-2', 'ring-red-400');
+            
+            document.getElementById('echo-earnings-container').classList.add('hidden');
+            document.getElementById('super-earnings-container').classList.add('hidden');
+            document.getElementById('echo-yes').classList.remove('ring-2', 'ring-[#8E44AD]');
+            document.getElementById('echo-no').classList.remove('ring-2', 'ring-red-400');
+            document.getElementById('super-yes').classList.remove('ring-2', 'ring-[#F5A623]');
+            document.getElementById('super-no').classList.remove('ring-2', 'ring-red-400');
+            
+            const existingLog = DB.dailyLogs[date];
+            if (existingLog) {
+                document.getElementById('gcash-existing').value = parseFloat(existingLog.gcash_existing_balance || 0).toLocaleString('en-US', {minimumFractionDigits:2});
+                document.getElementById('daily-notes').value = existingLog.notes || '';
+                
+                renderGCashList(date);
+                recalculateGCash(date);
+                renderLaundryList(date);
+                renderBillsList(date);
+                
+                if (existingLog.etrike_echo_operated) {
+                    const yesEcho = existingLog.etrike_echo_operated === 'YES';
+                    if (yesEcho) {
+                        document.getElementById('echo-earnings-container').classList.remove('hidden');
+                        document.getElementById('echo-yes').classList.add('ring-2', 'ring-[#8E44AD]');
+                        document.getElementById('echo-earnings').value = parseFloat(existingLog.etrike_echo_earnings || 0).toLocaleString('en-US', {minimumFractionDigits:2});
+                    } else {
+                        document.getElementById('echo-no').classList.add('ring-2', 'ring-red-400');
+                    }
+                }
+                if (existingLog.etrike_super_operated) {
+                    const yesSuper = existingLog.etrike_super_operated === 'YES';
+                    if (yesSuper) {
+                        document.getElementById('super-earnings-container').classList.remove('hidden');
+                        document.getElementById('super-yes').classList.add('ring-2', 'ring-[#F5A623]');
+                        document.getElementById('super-earnings').value = parseFloat(existingLog.etrike_super_earnings || 0).toLocaleString('en-US', {minimumFractionDigits:2});
+                    } else {
+                        document.getElementById('super-no').classList.add('ring-2', 'ring-red-400');
+                    }
+                }
+                
+                document.getElementById('modal-title').innerHTML = `Edit Daily Log <span class="text-xs bg-emerald-400 text-white px-2 py-1 rounded-xl ml-2">saved</span>`;
+                document.getElementById('date-warning').classList.remove('hidden');
+                document.getElementById('potential-xp').textContent = '0';
+            } else {
+                document.getElementById('modal-title').textContent = 'New Daily Log';
+                document.getElementById('date-warning').classList.add('hidden');
+                document.getElementById('potential-xp').textContent = '50';
+                document.getElementById('gcash-list').innerHTML = `<div class="text-center py-8 text-gray-500 italic bg-[#1A1A2E]/50 rounded-2xl">No GCash transactions yet</div>`;
+                document.getElementById('laundry-list').innerHTML = `<div class="text-center py-8 text-gray-500 italic bg-[#1A1A2E]/50 rounded-2xl">No laundry customers yet</div>`;
+                document.getElementById('bills-list').innerHTML = `<div class="text-center py-8 text-gray-500 italic bg-[#1A1A2E]/50 rounded-2xl">No bill payments yet</div>`;
+                document.getElementById('laundry-total-loads').textContent = 0;
+                document.getElementById('laundry-total-revenue').textContent = '₱0.00';
+                document.getElementById('laundry-txn-count').textContent = 0;
+                document.getElementById('bills-sum-collected').textContent = '₱0.00';
+                document.getElementById('bills-sum-fees').textContent = '₱0.00';
+                document.getElementById('bills-grand-total').textContent = '₱0.00';
+                document.getElementById('bills-txn-count').textContent = 0;
+                recalculateGCash(date);
+            }
+            
+            document.getElementById('daily-modal').classList.remove('hidden');
+            document.getElementById('daily-modal').classList.add('flex');
+        }
+        
+        function closeDailyModal() {
+            const modal = document.getElementById('daily-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        
+        // ============== DASHBOARD ==============
+        function renderDashboard() {
+            const today = getToday();
+            const log = DB.dailyLogs[today];
+            
+            let html = `
+            <div class="max-w-screen-2xl mx-auto">
+                <div class="mb-8">
+                    <h2 class="text-4xl font-bold mb-2">Good ${getTimeOfDay()}, Zaijian <span class="float">👋</span></h2>
+                    <p class="text-gray-400">Here's what happened in your business today</p>
+                </div>
+                
+                <!-- TODAY STATUS -->
+                <div class="glow-card p-8 flex flex-col lg:flex-row gap-8 mb-8">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="text-5xl font-bold">${today}</div>
+                                <div class="text-xl text-gray-400">${getDayName(today)}</div>
+                            </div>
+                            ${log ? 
+                                `<div class="text-emerald-400 px-6 py-3 bg-emerald-400/10 rounded-3xl flex items-center font-bold text-lg border border-emerald-400/30">
+                                    <i class="fa-solid fa-check-circle mr-2"></i> Logged
+                                </div>` : 
+                                `<button onclick="openDailyLog()" class="px-8 py-4 bg-gradient-to-r from-[#E94560] to-[#533483] text-white rounded-3xl font-bold text-lg flex items-center gap-x-3 hover:scale-105 transition glow-button pulse-glow">
+                                    LOG TODAY <i class="fa-solid fa-arrow-right"></i>
+                                </button>`
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4 flex-1">
+                        ${log ? `
+                        <div class="glow-card p-4 text-center">
+                            <div class="text-[#0070BA] text-xs mb-1 uppercase tracking-wider">GCash Net</div>
+                            <div class="text-4xl font-mono font-bold" style="color:${log.gcash_net >= 0 ? '#10B981' : '#EF4444'}">₱${parseFloat(log.gcash_net).toLocaleString('en-US', {minimumFractionDigits:2})}</div>
+                        </div>` : `<div class="glow-card p-4 text-center opacity-40"><div class="text-xs text-gray-500 uppercase">GCash Net</div><div class="text-4xl font-mono mt-2">—</div></div>`}
+                        
+                        ${log ? `
+                        <div class="glow-card p-4 text-center">
+                            <div class="text-[#17A589] text-xs mb-1 uppercase tracking-wider">Laundry</div>
+                            <div class="text-4xl font-mono font-bold">₱${parseFloat(log.laundry_total_revenue || 0).toLocaleString('en-US', {minimumFractionDigits:2})}</div>
+                            <div class="text-xs text-gray-500">${log.laundry_total_loads || 0} loads</div>
+                        </div>` : `<div class="glow-card p-4 text-center opacity-40"><div class="text-xs text-gray-500 uppercase">Laundry</div><div class="text-4xl font-mono mt-2">—</div></div>`}
+                        
+                        ${log ? `
+                        <div class="glow-card p-4 text-center">
+                            <div class="text-[#E67E22] text-xs mb-1 uppercase tracking-wider">Bills</div>
+                            <div class="text-4xl font-mono font-bold">₱${parseFloat(log.bills_grand_total || 0).toLocaleString('en-US', {minimumFractionDigits:2})}</div>
+                        </div>` : `<div class="glow-card p-4 text-center opacity-40"><div class="text-xs text-gray-500 uppercase">Bills</div><div class="text-4xl font-mono mt-2">—</div></div>`}
+                    </div>
+                </div>
+                
+                <!-- THIS WEEK AT A GLANCE -->
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-x-2"><i class="fa-solid fa-chart-bar text-[#E94560]"></i> THIS WEEK AT A GLANCE</h3>
+                <div id="week-glance" class="grid grid-cols-2 md:grid-cols-7 gap-4"></div>
+                
+                <!-- MINI CHART -->
+                <div class="glow-card p-6 mt-8">
+                    <div class="flex justify-between mb-4">
+                        <span class="font-bold">Last 7 days revenue streams</span>
+                        <span class="text-xs text-gray-400"><span class="inline-block w-3 h-3 bg-[#17A589] rounded mr-1"></span>Laundry <span class="inline-block w-3 h-3 bg-[#F5A623] rounded mx-1"></span>Trike <span class="inline-block w-3 h-3 bg-[#E94560] rounded mx-1"></span>Fees</span>
+                    </div>
+                    <div id="mini-chart" class="flex items-end gap-x-2 h-64"></div>
+                </div>
+            </div>`;
+            
+            document.getElementById('main-content').innerHTML = html;
+            renderWeekGlance();
+            renderMiniChart();
+        }
+        
+        function getTimeOfDay() {
+            const hour = new Date().getHours();
+            if (hour < 12) return 'morning';
+            if (hour < 18) return 'afternoon';
+            return 'evening';
+        }
+        
+        function renderWeekGlance() {
+            const container = document.getElementById('week-glance');
+            if (!container) return;
+            
+            const today = new Date();
+            let weekHTML = '';
+            
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(today.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                const log = DB.dailyLogs[dateStr];
+                const isToday = i === 0;
+                
+                weekHTML += `
+                <div onclick="openDailyLog('${dateStr}')" class="glow-card p-4 cursor-pointer transition-all hover:scale-105 ${isToday ? 'border-[#E94560]/50' : ''}">
+                    <div class="text-xs font-medium mb-2 ${isToday ? 'text-[#E94560]' : 'text-gray-400'}">${dateStr.slice(5)}</div>
+                    <div class="text-[#0070BA] font-mono text-lg mb-px">${log ? '₱' + parseFloat(log.gcash_net || 0).toLocaleString('en-US', {minimumFractionDigits:0}) : '—'}</div>
+                    <div class="text-[#17A589] text-xs">${log ? '₱' + parseFloat(log.laundry_total_revenue || 0).toFixed(0) : ''}</div>
+                    ${log && (log.etrike_echo_earnings || log.etrike_super_earnings) ? `<div class="text-[#F5A623] text-xs">🛺 ₱${(parseFloat(log.etrike_echo_earnings || 0) + parseFloat(log.etrike_super_earnings || 0)).toFixed(0)}</div>` : ''}
+                    ${isToday && !log ? '<div class="mt-2 text-[10px] text-[#E94560]">Click to log!</div>' : ''}
+                </div>`;
+            }
+            container.innerHTML = weekHTML;
+        }
+        
+        function renderMiniChart() {
+            const container = document.getElementById('mini-chart');
+            if (!container) return;
+            
+            const today = new Date();
+            let bars = '';
+            let maxVal = 100;
+            
+            // Find max for scaling
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(today.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                const log = DB.dailyLogs[dateStr];
+                if (log) {
+                    const total = (log.laundry_total_revenue || 0) + (log.etrike_echo_earnings || 0) + (log.etrike_super_earnings || 0) + (log.gcash_total_service_fees || 0) + (log.bills_total_service_fee || 0);
+                    maxVal = Math.max(maxVal, total);
+                }
+            }
+            
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(today.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                const log = DB.dailyLogs[dateStr];
+                
+                const laundry = log ? parseFloat(log.laundry_total_revenue || 0) : 0;
+                const trike = (log ? parseFloat(log.etrike_echo_earnings || 0) : 0) + (log ? parseFloat(log.etrike_super_earnings || 0) : 0);
+                const fees = (log ? parseFloat(log.gcash_total_service_fees || 0) : 0) + (log ? parseFloat(log.bills_total_service_fee || 0) : 0);
+                
+                bars += `
+                <div class="flex-1 flex flex-col-reverse gap-y-px h-full group cursor-pointer" onclick="openDailyLog('${dateStr}')">
+                    <div style="height: ${Math.max((laundry / maxVal) * 100, 5)}%" class="bg-[#17A589] rounded transition-all group-hover:brightness-110"></div>
+                    <div style="height: ${Math.max((trike / maxVal) * 100, 5)}%" class="bg-[#F5A623] rounded transition-all group-hover:brightness-110"></div>
+                    <div style="height: ${Math.max((fees / maxVal) * 100, 5)}%" class="bg-[#E94560] rounded transition-all group-hover:brightness-110"></div>
+                    <div class="text-[10px] text-center mt-1 text-gray-500">${dateStr.slice(8)}</div>
+                </div>`;
+            }
+            container.innerHTML = bars;
+        }
+        
+        // ============== DAILY LOG LIST PAGE ==============
+        function renderDailyLogList() {
+            let html = `
+            <div class="max-w-screen-2xl mx-auto">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold">All Daily Logs</h2>
+                        <p class="text-gray-400 text-sm">${Object.keys(DB.dailyLogs).length} days logged</p>
+                    </div>
+                    <button onclick="openDailyLog()" class="flex items-center gap-x-3 px-6 py-3 bg-gradient-to-r from-[#E94560] to-[#533483] text-white rounded-3xl font-bold hover:scale-105 transition glow-button">
+                        <i class="fa-solid fa-plus"></i> New Log
+                    </button>
+                </div>
+                <div id="daily-list-container" class="space-y-4"></div>
+            </div>`;
+            
+            document.getElementById('main-content').innerHTML = html;
+            
+            const container = document.getElementById('daily-list-container');
+            const dates = Object.keys(DB.dailyLogs).sort((a, b) => b.localeCompare(a));
+            
+            if (dates.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-20 text-gray-400">
+                        <div class="text-6xl mb-4">📭</div>
+                        <p class="text-lg mb-4">No logs yet</p>
+                        <button onclick="openDailyLog()" class="px-8 py-4 border-2 border-dashed border-[#E94560] text-[#E94560] rounded-3xl text-sm font-bold hover:bg-[#E94560]/10 transition">
+                            Start logging today
+                        </button>
+                    </div>`;
+                return;
+            }
+            
+            let listHTML = '';
+            dates.forEach((date, index) => {
+                const l = DB.dailyLogs[date];
+                const isToday = date === getToday();
+                listHTML += `
+                <div onclick="openDailyLog('${date}')" class="glow-card p-6 grid grid-cols-2 md:grid-cols-6 gap-y-4 cursor-pointer hover:border-[#E94560]/50 transition-all ${isToday ? 'border-[#E94560]/50' : ''}" style="animation: fadeIn 0.3s ease ${index * 0.05}s both;">
+                    <div class="col-span-2 md:col-span-1">
+                        <div class="font-mono font-bold ${isToday ? 'text-[#E94560]' : ''}">${date}</div>
+                        <div class="text-xs text-gray-400">${l.day_of_week}</div>
+                    </div>
+                    <div class="text-[#0070BA]">
+                        <div class="text-xs text-gray-500">GCash Net</div>
+                        <span class="font-mono text-2xl font-bold block" style="color:${l.gcash_net >= 0 ? '#10B981' : '#EF4444'}">₱${parseFloat(l.gcash_net || 0).toLocaleString('en-US', {minimumFractionDigits:0})}</span>
+                    </div>
+                    <div class="text-[#17A589]">
+                        <div class="text-xs text-gray-500">Laundry</div>
+                        <span class="font-mono text-2xl font-bold block">₱${parseFloat(l.laundry_total_revenue || 0).toLocaleString('en-US', {minimumFractionDigits:0})}</span>
+                    </div>
+                    <div class="text-[#8E44AD]">
+                        <div class="text-xs text-gray-500">Echo</div>
+                        <span class="font-mono text-xl font-bold block">${l.etrike_echo_operated === 'YES' ? '✅ ₱' + parseFloat(l.etrike_echo_earnings || 0).toLocaleString('en-US', {minimumFractionDigits:0}) : '—'}</span>
+                    </div>
+                    <div class="text-[#F5A623]">
+                        <div class="text-xs text-gray-500">Super</div>
+                        <span class="font-mono text-xl font-bold block">${l.etrike_super_operated === 'YES' ? '✅ ₱' + parseFloat(l.etrike_super_earnings || 0).toLocaleString('en-US', {minimumFractionDigits:0}) : '—'}</span>
+                    </div>
+                    <div class="text-[#E67E22]">
+                        <div class="text-xs text-gray-500">Bills</div>
+                        <span class="font-mono text-2xl font-bold block">₱${parseFloat(l.bills_grand_total || 0).toLocaleString('en-US', {minimumFractionDigits:0})}</span>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = listHTML;
+        }
+        
+        // ============== WEEKLY SUMMARY ==============
+        function renderWeeklySummary() {
+            const dates = Object.keys(DB.dailyLogs).sort((a, b) => b.localeCompare(a));
+            const weeks = {};
+            
+            dates.forEach(d => {
+                const label = getWeekLabel(d);
+                if (!weeks[label]) weeks[label] = [];
+                weeks[label].push(d);
+            });
+            
+            let html = `<div class="max-w-screen-2xl mx-auto">
+                <h2 class="text-3xl font-bold mb-2">Weekly Summaries</h2>
+                <p class="text-gray-400 mb-8">${Object.keys(weeks).length} weeks tracked</p>`;
+            
+            if (Object.keys(weeks).length === 0) {
+                html += `
+                    <div class="text-center py-20 text-gray-400">
+                        <div class="text-6xl mb-4">📊</div>
+                        <p>No weekly data yet. Start logging daily!</p>
+                    </div>`;
+            } else {
+                Object.keys(weeks).sort().reverse().forEach((week, index) => {
+                    const days = weeks[week];
+                    let gcashIn = 0, gcashOut = 0, gcashFees = 0, gcashNetTotal = 0;
+                    let laundryLoads = 0, laundryRev = 0, laundryCount = 0;
+                    let echoDays = 0, echoEarn = 0;
+                    let superDays = 0, superEarn = 0;
+                    let billsTx = 0, billsCol = 0, billsFee = 0;
+                    
+                    days.forEach(date => {
+                        const l = DB.dailyLogs[date];
+                        if (!l) return;
+                        gcashIn += parseFloat(l.gcash_total_cash_in_amount || 0);
+                        gcashOut += parseFloat(l.gcash_total_cash_out_amount || 0);
+                        gcashFees += parseFloat(l.gcash_total_service_fees || 0);
+                        gcashNetTotal += parseFloat(l.gcash_net || 0);
+                        laundryLoads += parseFloat(l.laundry_total_loads || 0);
+                        laundryRev += parseFloat(l.laundry_total_revenue || 0);
+                        laundryCount += parseFloat(l.laundry_transaction_count || 0);
+                        if (l.etrike_echo_operated === 'YES') { echoDays++; echoEarn += parseFloat(l.etrike_echo_earnings || 0); }
+                        if (l.etrike_super_operated === 'YES') { superDays++; superEarn += parseFloat(l.etrike_super_earnings || 0); }
+                        billsTx += parseFloat(l.bills_transaction_count || 0);
+                        billsCol += parseFloat(l.bills_total_collected || 0);
+                        billsFee += parseFloat(l.bills_total_service_fee || 0);
+                    });
+                    
+                    html += `
+                    <div class="glow-card p-8 mb-8" style="animation: fadeIn 0.4s ease ${index * 0.1}s both;">
+                        <div class="flex justify-between mb-6">
+                            <div class="text-2xl font-bold">${week} <span class="text-sm font-normal text-gray-400">(${days.length} days)</span></div>
+                            <div class="text-right">
+                                <div class="text-xs text-gray-400">Total Revenue</div>
+                                <div class="text-3xl font-mono font-bold text-[#E94560]">₱${(laundryRev + echoEarn + superEarn + billsCol + billsFee + gcashFees).toLocaleString('en-US', {minimumFractionDigits:0})}</div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                            <div class="border border-[#0070BA]/30 rounded-3xl p-5 bg-[#0070BA]/5">
+                                <div class="text-[#0070BA] font-bold mb-4 flex items-center gap-x-2"><i class="fa-solid fa-wallet"></i> GCash</div>
+                                <div class="text-xs text-gray-400">Cash In <span class="font-mono float-right text-white">₱${gcashIn.toLocaleString('en-US', {minimumFractionDigits:0})}</span></div>
+                                <div class="text-xs text-gray-400">Cash Out <span class="font-mono float-right text-white">₱${gcashOut.toLocaleString('en-US', {minimumFractionDigits:0})}</span></div>
+                                <div class="text-xs mt-3 font-semibold text-emerald-400">Net <span class="font-mono float-right">₱${gcashNetTotal.toLocaleString('en-US', {minimumFractionDigits:0})}</span></div>
+                                <div class="text-xs mt-3 text-yellow-400">Fees <span class="font-mono float-right">₱${gcashFees.toLocaleString('en-US', {minimumFractionDigits:0})}</span></div>
+                            </div>
+                            
+                            <div class="border border-[#17A589]/30 rounded-3xl p-5 bg-[#17A589]/5">
+                                <div class="text-[#17A589] font-bold mb-4 flex items-center gap-x-2"><i class="fa-solid fa-shirt"></i> Laundry</div>
+                                <div class="text-xs text-gray-400">Total Loads <span class="font-mono float-right text-white">${laundryLoads}</span></div>
+                                <div class="text-xs text-gray-400">Revenue <span class="font-mono float-right text-white">₱${laundryRev.toLocaleString('en-US', {minimumFractionDigits:0})}</span></div>
+                                <div class="text-xs text-gray-400">Avg/day <span class="font-mono float-right text-white">₱${(laundryRev / days.length).toFixed(0)}</span></div>
+                            </div>
+                            
+                            <div class="border border-[#8E44AD]/30 rounded-3xl p-5 bg-[#8E44AD]/5">
+                                <div class="text-[#8E44AD] font-bold mb-4 flex items-center gap-x-2"><i class="fa-solid fa-bolt"></i> Echo</div>
+                                <div class="text-xs text-gray-400">Days <span class="font-mono float-right text-white">${echoDays}</span></div>
+                                <div class="text-xs text-gray-400">Earnings <span class="font-mono float-right text-white">₱${echoEarn.toLocaleString('en-US', {minimumFractionDigits:0})}</span></div>
+                                <div class="text-xs text-gray-400">Avg/day <span class="font-mono float-right text-white">₱${echoDays ? (echoEarn / echoDays).toFixed(0) : 0}</span></div>
+                            </div>
+                            
+                            <div class="border border-[#F5A623]/30 rounded-3xl p-5 bg-[#F5A623]/5">
+                                <div class="text-[#F5A623] font-bold mb-4 flex items-center gap-x-2"><i class="fa-solid fa-bolt"></i> Super</div>
+                                <div class="text-xs text-gray-400">Days <span class="font-mono float-right text-white">${superDays}</span></div>
+                                <div class="text-xs text-gray-400">Earnings <span class="font-mono float-right text-white">₱${superEarn.toLocaleString('en-US', {minimumFractionDigits:0})}</span></div>
+                                <div class="text-xs text-gray-400">Avg/day <span class="font-mono float-right text-white">₱${superDays ? (superEarn / superDays).toFixed(0) : 0}</span></div>
+                            </div>
+                            
+                            <div class="border border-[#E67E22]/30 rounded-3xl p-5 bg-[#E67E22]/5">
+                                <div class="text-[#E67E22] font-bold mb-4 flex items-center gap-x-2"><i class="fa-solid fa-file-invoice-dollar"></i> Bills</div>
+                                <div class="text-xs text-gray-400">Transactions <span class="font-mono float-right text-white">${billsTx}</span></div>
+                                <div class="text-xs text-gray-400">Collected <span class="font-mono float-right text-white">₱${billsCol.toLocaleString('en-US', {minimumFractionDigits:0})}</span></div>
+                                <div class="text-xs text-gray-400">Fees <span class="font-mono float-right text-yellow-400">₱${billsFee.toLocaleString('en-US', {minimumFractionDigits:0})}</span></div>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            }
+            
+            html += `</div>`;
+            document.getElementById('main-content').innerHTML = html;
+        }
+        
+        // ============== MONTHLY OVERVIEW ==============
+        function renderMonthlyOverview() {
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            
+            let html = `
+            <div class="max-w-screen-2xl mx-auto">
+                <div class="flex justify-between items-baseline mb-8">
+                    <div>
+                        <h2 class="text-3xl font-bold">Monthly Overview</h2>
+                        <p class="text-gray-400">${currentMonth}</p>
+                    </div>
+                </div>
+                <div id="monthly-content" class="space-y-10"></div>
+            </div>`;
+            
+            document.getElementById('main-content').innerHTML = html;
+            
+            const daysInMonth = Object.keys(DB.dailyLogs).filter(d => d.startsWith(currentMonth));
+            
+            let totalGcashNet = 0, totalLaundry = 0, echoOp = 0, superOp = 0, totalBills = 0;
+            let totalFees = 0, totalTrike = 0;
+            
+            daysInMonth.forEach(d => {
+                const l = DB.dailyLogs[d];
+                totalGcashNet += parseFloat(l.gcash_net || 0);
+                totalLaundry += parseFloat(l.laundry_total_revenue || 0);
+                totalTrike += parseFloat(l.etrike_echo_earnings || 0) + parseFloat(l.etrike_super_earnings || 0);
+                totalFees += parseFloat(l.gcash_total_service_fees || 0) + parseFloat(l.bills_total_service_fee || 0);
+                totalBills += parseFloat(l.bills_grand_total || 0);
+                if (l.etrike_echo_operated === 'YES') echoOp++;
+                if (l.etrike_super_operated === 'YES') superOp++;
+            });
+            
+            const contentHTML = `
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glow-card p-6 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-[#0070BA]/20 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-wallet text-[#0070BA] text-xl"></i>
+                    </div>
+                    <div class="text-gray-400 text-sm">GCash Net</div>
+                    <div class="text-4xl font-mono font-bold mt-1" style="color:${totalGcashNet >= 0 ? '#10B981' : '#EF4444'}">₱${totalGcashNet.toLocaleString('en-US', {minimumFractionDigits:0})}</div>
+                </div>
+                <div class="glow-card p-6 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-[#17A589]/20 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-shirt text-[#17A589] text-xl"></i>
+                    </div>
+                    <div class="text-gray-400 text-sm">Laundry</div>
+                    <div class="text-4xl font-mono font-bold mt-1 text-[#17A589]">₱${totalLaundry.toLocaleString('en-US', {minimumFractionDigits:0})}</div>
+                </div>
+                <div class="glow-card p-6 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-[#F5A623]/20 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-bolt text-[#F5A623] text-xl"></i>
+                    </div>
+                    <div class="text-gray-400 text-sm">E-Trike</div>
+                    <div class="text-4xl font-mono font-bold mt-1 text-[#F5A623]">₱${totalTrike.toLocaleString('en-US', {minimumFractionDigits:0})}</div>
+                    <div class="text-xs text-gray-500 mt-1">${echoOp + superOp} days</div>
+                </div>
+                <div class="glow-card p-6 text-center">
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-[#E67E22]/20 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-file-invoice-dollar text-[#E67E22] text-xl"></i>
+                    </div>
+                    <div class="text-gray-400 text-sm">Bills</div>
+                    <div class="text-4xl font-mono font-bold mt-1 text-[#E67E22]">₱${totalBills.toLocaleString('en-US', {minimumFractionDigits:0})}</div>
+                </div>
+            </div>
+            
+            <div class="glow-card p-6 mt-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg">Daily Breakdown</h3>
+                    <div class="text-sm text-gray-400">${daysInMonth.length} days logged</div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-gray-400 text-left">
+                                <th class="py-3 px-4">Date</th>
+                                <th class="py-3 px-4 text-right">GCash Net</th>
+                                <th class="py-3 px-4 text-right">Laundry</th>
+                                <th class="py-3 px-4 text-center">Echo</th>
+                                <th class="py-3 px-4 text-center">Super</th>
+                                <th class="py-3 px-4 text-right">Bills</th>
+                                <th class="py-3 px-4 text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#0F3460]">`;
+            
+            daysInMonth.sort().reverse().forEach(date => {
+                const l = DB.dailyLogs[date];
+                const dayTotal = parseFloat(l.laundry_total_revenue || 0) + parseFloat(l.etrike_echo_earnings || 0) + parseFloat(l.etrike_super_earnings || 0) + parseFloat(l.bills_grand_total || 0);
+                contentHTML += `
+                            <tr class="hover:bg-[#1A1A2E]/50 transition cursor-pointer" onclick="openDailyLog('${date}')">
+                                <td class="py-4 px-4 font-medium">${date}</td>
+                                <td class="py-4 px-4 text-right font-mono" style="color:${l.gcash_net >= 0 ? '#10B981' : '#EF4444'}">₱${parseFloat(l.gcash_net || 0).toLocaleString('en-US', {minimumFractionDigits:0})}</td>
+                                <td class="py-4 px-4 text-right font-mono text-[#17A589]">₱${parseFloat(l.laundry_total_revenue || 0).toLocaleString('en-US', {minimumFractionDigits:0})}</td>
+                                <td class="py-4 px-4 text-center">${l.etrike_echo_operated === 'YES' ? '✅' : '—'}</td>
+                                <td class="py-4 px-4 text-center">${l.etrike_super_operated === 'YES' ? '✅' : '—'}</td>
+                                <td class="py-4 px-4 text-right font-mono text-[#E67E22]">₱${parseFloat(l.bills_grand_total || 0).toLocaleString('en-US', {minimumFractionDigits:0})}</td>
+                                <td class="py-4 px-4 text-right font-mono font-bold text-[#E94560]">₱${dayTotal.toLocaleString('en-US', {minimumFractionDigits:0})}</td>
+                            </tr>`;
+            });
+            
+            contentHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>`;
+            
+            document.getElementById('monthly-content').innerHTML = contentHTML;
+        }
+        
+        // ============== CHARTS PAGE ==============
+        function renderCharts() {
+            const dates = Object.keys(DB.dailyLogs).sort().slice(-14);
+            
+            let gcashData = [];
+            let laundryData = [];
+            let trikeData = [];
+            
+            dates.forEach(date => {
+                const l = DB.dailyLogs[date];
+                gcashData.push({ in: l.gcash_total_cash_in_amount || 0, out: l.gcash_total_cash_out_amount || 0 });
+                laundryData.push(l.laundry_total_revenue || 0);
+                trikeData.push((l.etrike_echo_earnings || 0) + (l.etrike_super_earnings || 0));
+            });
+            
+            const maxGcash = Math.max(...gcashData.map(d => Math.max(d.in, d.out)), 100);
+            const maxLaundry = Math.max(...laundryData, 100);
+            const maxTrike = Math.max(...trikeData, 100);
+            
+            let gcashBars = '';
+            gcashData.forEach(d => {
+                gcashBars += `
+                    <div class="flex flex-col-reverse gap-y-px w-6">
+                        <div style="height:${(d.in / maxGcash) * 100}%" class="bg-[#0070BA] rounded-t"></div>
+                        <div style="height:${(d.out / maxGcash) * 100}%" class="bg-[#EF4444] rounded-t"></div>
+                    </div>`;
+            });
+            
+            let laundryBars = '';
+            laundryData.forEach(d => {
+                laundryBars += `<div style="height:${(d / maxLaundry) * 100}%" class="flex-1 bg-[#17A589] rounded-t mx-px hover:brightness-110 transition"></div>`;
+            });
+            
+            let trikeBars = '';
+            trikeData.forEach(d => {
+                trikeBars += `<div style="height:${(d / maxTrike) * 100}%" class="flex-1 bg-[#F5A623] rounded-t mx-px hover:brightness-110 transition"></div>`;
+            });
+            
+            const html = `
+            <div class="max-w-screen-2xl mx-auto">
+                <h2 class="text-3xl font-bold mb-2">Progress Charts</h2>
+                <p class="text-gray-400 mb-8">Visualize your business growth</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="glow-card p-6">
+                        <div class="font-bold mb-4 flex items-center gap-x-2">
+                            <i class="fa-solid fa-wallet text-[#0070BA]"></i>
+                            GCash Cash In vs Out
+                        </div>
+                        <div class="h-72 flex items-end gap-x-2 justify-center pb-6 border-b border-[#0F3460]">
+                            ${gcashBars || '<div class="text-gray-500">No data yet</div>'}
+                        </div>
+                        <div class="flex justify-center gap-x-6 mt-4 text-sm">
+                            <span class="flex items-center gap-x-2"><span class="w-3 h-3 bg-[#0070BA] rounded"></span> Cash In</span>
+                            <span class="flex items-center gap-x-2"><span class="w-3 h-3 bg-[#EF4444] rounded"></span> Cash Out</span>
+                        </div>
+                    </div>
+                    
+                    <div class="glow-card p-6">
+                        <div class="font-bold mb-4 flex items-center gap-x-2">
+                            <i class="fa-solid fa-shirt text-[#17A589]"></i>
+                            Laundry Revenue
+                        </div>
+                        <div class="h-72 flex items-end pb-6 border-b border-[#0F3460]">
+                            ${laundryBars || '<div class="text-gray-500 w-full text-center">No data yet</div>'}
+                        </div>
+                    </div>
+                    
+                    <div class="glow-card p-6">
+                        <div class="font-bold mb-4 flex items-center gap-x-2">
+                            <i class="fa-solid fa-bolt text-[#F5A623]"></i>
+                            E-Trike Earnings
+                        </div>
+                        <div class="h-72 flex items-end pb-6 border-b border-[#0F3460]">
+                            ${trikeBars || '<div class="text-gray-500 w-full text-center">No data yet</div>'}
+                        </div>
+                    </div>
+                    
+                    <div class="glow-card p-6 flex items-center justify-center">
+                        <div class="text-center text-gray-500">
+                            <i class="fa-solid fa-chart-pie text-6xl mb-4 opacity-30"></i>
+                            <p>More charts coming soon!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            
+            document.getElementById('main-content').innerHTML = html;
+        }
+        
+        // ============== ACHIEVEMENTS PAGE ==============
+        function renderAchievements() {
+            const totalUnlocked = DB.achievements ? Object.keys(DB.achievements).length : 0;
+            const totalAchievements = Object.keys(ACHIEVEMENTS).length;
+            const progress = (totalUnlocked / totalAchievements) * 100;
+            
+            let html = `
+            <div class="max-w-screen-2xl mx-auto">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold">Achievements</h2>
+                        <p class="text-gray-400">${totalUnlocked} of ${totalAchievements} unlocked</p>
+                    </div>
+                    <div class="w-48">
+                        <div class="xp-bar-container h-3">
+                            <div class="xp-bar-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">`;
+            
+            Object.entries(ACHIEVEMENTS).forEach(([key, ach], index) => {
+                const unlocked = DB.achievements && DB.achievements[key];
+                html += `
+                <div class="glow-card p-6 ${unlocked ? 'border-yellow-400/30' : 'opacity-60'}" style="animation: fadeIn 0.3s ease ${index * 0.05}s both;">
+                    <div class="flex items-start gap-x-4">
+                        <div class="text-5xl ${unlocked ? '' : 'grayscale'}">${ach.icon}</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg ${unlocked ? 'text-white' : 'text-gray-500'}">${ach.name}</h3>
+                            <p class="text-sm text-gray-400 mb-2">${ach.desc}</p>
+                            <div class="flex items-center gap-x-3">
+                                <span class="text-yellow-400 font-bold text-sm">+${ach.xp} XP</span>
+                                ${unlocked ? '<span class="text-emerald-400 text-xs"><i class="fa-solid fa-check"></i> Unlocked</span>' : '<span class="text-gray-600 text-xs"><i class="fa-solid fa-lock"></i> Locked</span>'}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            
+            html += `</div></div>`;
+            document.getElementById('main-content').innerHTML = html;
+        }
+        
+        // ============== NAVIGATION ==============
+        let currentPage = 'dashboard';
+        
+        function navigateTo(page) {
+            currentPage = page;
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
+            const activeNav = document.getElementById('nav-' + page);
+            if (activeNav) activeNav.classList.add('nav-active');
+            
+            if (page === 'dashboard') renderDashboard();
+            else if (page === 'daily-log') renderDailyLogList();
+            else if (page === 'weekly') renderWeeklySummary();
+            else if (page === 'monthly') renderMonthlyOverview();
+            else if (page === 'charts') renderCharts();
+            else if (page === 'achievements') renderAchievements();
+        }
+        
+        // ============== EXPORT CSV ==============
+        function exportToCSV() {
+            let csv = 'Date,GCash Net,Laundry Revenue,Echo Earnings,Super Earnings,Bills Grand Total,Notes\n';
+            Object.keys(DB.dailyLogs).sort().forEach(date => {
+                const l = DB.dailyLogs[date];
+                csv += `${date},${l.gcash_net || 0},${l.laundry_total_revenue || 0},${l.etrike_echo_earnings || 0},${l.etrike_super_earnings || 0},${l.bills_grand_total || 0},"${(l.notes || '').replace(/"/g, '""')}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `ZaiBill_${getToday()}.csv`;
+            link.click();
+            showToast('📤 CSV exported!');
+        }
+        
+        function showProfile() {
+            document.getElementById('profile-modal').classList.remove('hidden');
+            document.getElementById('profile-modal').classList.add('flex');
+        }
+        
+        function hideProfile() {
+            document.getElementById('profile-modal').classList.add('hidden');
+            document.getElementById('profile-modal').classList.remove('flex');
+        }
+        
+        function clearAllData() {
+            if (confirm('Delete ALL data and start completely fresh? This cannot be undone!')) {
+                localStorage.removeItem('zaibillDB_v2');
+                DB = { dailyLogs: {}, gcashTxns: {}, laundryTxns: {}, billsTxns: {}, gameStats: { xp: 0, level: 1, totalXpEarned: 0, streak: 0, lastLogDate: null, dailyGoalsCompleted: 0 }, achievements: {} };
+                hideProfile();
+                showToast('🗑️ All data reset!');
+                updateXpDisplay();
+                updateAchievementCount();
+                renderDashboard();
+            }
+        }
+        
+        // ============== START APP ==============
+        function launchZaiBill() {
+            loadDB();
+            createParticles();
+            updateXpDisplay();
+            updateAchievementCount();
+            updateDailyGoal();
+            
+            // Show today in header
+            const todayEl = document.getElementById('today-date');
+            if (todayEl) todayEl.textContent = getToday() + ' • ' + getDayName(getToday());
+            
+            // Check if today is logged
+            const badge = document.getElementById('today-badge');
+            if (badge) {
+                if (DB.dailyLogs[getToday()]) {
+                    badge.innerHTML = `✅ <span class="text-emerald-400">Logged</span>`;
+                    badge.className = 'px-3 py-1 text-xs font-semibold rounded-2xl bg-emerald-400/10 text-emerald-400 flex items-center gap-x-1';
+                    document.getElementById('log-notification')?.classList.add('hidden');
+                } else {
+                    badge.innerHTML = `⭕ <span class="text-red-400">Not logged</span>`;
+                    badge.className = 'px-3 py-1 text-xs font-semibold rounded-2xl bg-red-400/10 text-red-400 flex items-center gap-x-1';
+                    document.getElementById('log-notification')?.classList.remove('hidden');
+                }
+            }
+            
+            // Update total days
+            document.getElementById('total-days-logged').textContent = Object.keys(DB.dailyLogs).length;
+            
+            // Check achievements
+            checkAchievements();
+            
+            // Render initial dashboard
+            renderDashboard();
+            
+            console.log('%c⚡ ZaiBill PRO GAMIFIED — LOADED', 'background:linear-gradient(90deg,#E94560,#533483);color:#fff;padding:4px 12px;border-radius:8px;font-weight:bold;font-size:14px;');
+            console.log('%c✨ Features: XP System, Streaks, Achievements, Particles, Confetti', 'color:#E94560;');
+        }
+        
+        // Launch immediately
+        window.onload = launchZaiBill;
+        
+        // Add fade-in animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
